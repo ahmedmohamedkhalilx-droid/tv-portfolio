@@ -6,6 +6,11 @@ const PROJECTS = {
     desc: 'Marketing site for Hany ElAraby & Co., an Egyptian audit, tax and advisory firm. Next.js, Tailwind and next-intl, in English and Arabic with full RTL.',
     url: 'https://helco-co.github.io/',
   },
+  dental: {
+    title: 'The Dental Hauz',
+    desc: 'Website for a dental clinic (implants, oral surgery, clear aligners and cosmetic dentistry): a custom WordPress theme built from the brand sheet. Shown here as a static preview of the theme.',
+    url: 'https://ahmedmohamedkhalilx-droid.github.io/The-dental-Website-/',
+  },
   tessera: {
     title: 'Tessera',
     desc: 'Online store for an Egyptian luxury bed and bath linen house: a custom Shopify theme with about thirty bespoke sections, English and Arabic with full right-to-left support. Shown here as recordings of the live storefront: the home page, the Bed Linen collection and a set page.',
@@ -49,6 +54,11 @@ try {
           body: 0x33161a, back: 0x211415, bezel: 0x211415, accent: 0xc9c0b0, knob: 0xc9c0b0, slot: 0x150b0c,
           screenLight: '#4a5244', screenDark: '#363c31', screenText: '#c9c0b0',
         },
+      },
+      {
+        // brand sheet: umber #514A43, sage #657568 / #A8B6A5, blush #D8B8B2, cream #F4F0E8
+        id: 'dental', title: 'The Dental Hauz', siteUrl: PROJECTS.dental.url,
+        palette: { body: 0x514a43, back: 0x3d3833, bezel: 0x2b2824, accent: 0xd8b8b2, knob: 0xa8b6a5, slot: 0x26231f },
       },
     ],
     { onPress: (id) => openProject(id) }
