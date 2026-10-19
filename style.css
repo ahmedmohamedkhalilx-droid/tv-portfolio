@@ -212,7 +212,7 @@ h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
   .steps { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 700px) {
-  .topnav a:not(.lang) { display: none; }
+  .topnav a:not(.lang):not(.alt) { display: none; } /* phones keep the retro TV and the language switch */
   .cards, .steps { grid-template-columns: 1fr; }
   .stats { grid-template-columns: repeat(3, 1fr); gap: .6rem; }
   .work .stage { padding: 0; }
