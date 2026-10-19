@@ -1,4 +1,4 @@
-import { createTvs } from './tv3d.js?v=20261019c'; // bump v= on every release so browsers fetch the new files
+import { createTvs } from './tv3d.js?v=20261019d'; // bump v= on every release so browsers fetch the new files
 
 const LANG = document.documentElement.lang === 'ar' ? 'ar' : 'en';
 const BASE = new URL('.', import.meta.url); // the site root, so relative paths work from /ar/ as well
@@ -254,7 +254,7 @@ function alignLabels() {
   const sideBySide = spots.every((s) => Math.abs(s.bottom - spots[0].bottom) < 4);
   labelRow.classList.toggle('aligned', sideBySide);
   if (!sideBySide) return;
-  const left = labelRow.parentElement.getBoundingClientRect().left;
+  const left = labelRow.getBoundingClientRect().left;
   labelRow.style.setProperty('--label-x', spots[0].left - left + 'px');
   labelRow.style.setProperty('--label-w', (spots[spots.length - 1].right - spots[0].left) / spots.length + 'px');
 }
@@ -278,3 +278,47 @@ function setStudyOpen(open) {
   studyToggle.setAttribute('aria-expanded', String(open));
   studyToggle.textContent = open ? UI.hideStudy : UI.study;
 }
+
+// ---------- the intro: a folded device that opens as you scroll ----------
+// Progress p runs 0 → 1 across the intro section; the first 60% opens the device, the rest
+// pushes it forward and fades the big name, then the page scrolls on into the hero.
+const unfold = document.querySelector('.unfold');
+const unfoldStage = unfold && unfold.querySelector('.unfold-stage');
+const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const clamp01 = (x) => Math.min(1, Math.max(0, x));
+function updateUnfold() {
+  if (!unfold) return;
+  if (reduceMotion) { unfoldStage.style.setProperty('--open', 1); unfoldStage.style.setProperty('--lock', 0); return; }
+  const range = unfold.offsetHeight - window.innerHeight;
+  const p = range > 0 ? clamp01(-unfold.getBoundingClientRect().top / range) : 1;
+  const open = easeInOut(clamp01(p / 0.6));
+  unfoldStage.style.setProperty('--open', open.toFixed(4));
+  unfoldStage.style.setProperty('--lock', clamp01(1 - open * 2.4).toFixed(4)); // the lock screen gives way early in the swing
+  unfoldStage.style.setProperty('--zoom', easeInOut(clamp01((p - 0.6) / 0.4)).toFixed(4));
+}
+let unfoldTicking = false;
+window.addEventListener('scroll', () => {
+  if (unfoldTicking) return;
+  unfoldTicking = true;
+  requestAnimationFrame(() => { unfoldTicking = false; updateUnfold(); });
+}, { passive: true });
+window.addEventListener('resize', updateUnfold);
+updateUnfold();
+
+// the lock screen shows the time in Cairo
+const clockFmt = new Intl.DateTimeFormat(LANG === 'ar' ? 'ar-EG' : 'en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Africa/Cairo' });
+function tickClock() { document.querySelectorAll('[data-clock]').forEach((el) => { el.textContent = clockFmt.format(new Date()); }); }
+tickClock();
+setInterval(tickClock, 30000);
+
+// ---------- sections drift up into place as they enter the screen ----------
+const revealer = 'IntersectionObserver' in window && !reduceMotion
+  ? new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); revealer.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 })
+  : null;
+document.querySelectorAll('.reveal').forEach((el, i) => {
+  if (!revealer) { el.classList.add('in'); return; }
+  el.style.transitionDelay = (i % 4) * 70 + 'ms'; // neighbours arrive one after another
+  revealer.observe(el);
+});
