@@ -1,4 +1,4 @@
-import { createTvs } from './tv3d.js';
+import { createTvs } from './tv3d.js?v=20261019c'; // bump v= on every release so browsers fetch the new files
 
 const LANG = document.documentElement.lang === 'ar' ? 'ar' : 'en';
 const BASE = new URL('.', import.meta.url); // the site root, so relative paths work from /ar/ as well
@@ -129,8 +129,9 @@ const pLink = document.getElementById('p-link');
 const study = document.getElementById('study');
 const studyToggle = document.getElementById('study-toggle');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-// phones and data-saver: the TVs show stills of the sites; the live site loads only when a project is opened
-const lite = window.matchMedia('(max-width: 700px)').matches || !!(navigator.connection && navigator.connection.saveData);
+// the TVs on the wall show stills of the sites: always visible, and light (no three live sites at once);
+// the live site loads when a project is opened
+const lite = true;
 
 let tvs = null;
 let current = null;
