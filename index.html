@@ -4,12 +4,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ahmed Khalil | Portfolio</title>
-  <meta name="description" content="Portfolio of Ahmed Khalil, student at the American University in Cairo. Press a TV to see a project.">
+  <meta name="description" content="Ahmed Khalil, web developer in Cairo. Websites and online stores in English and Arabic: HELCO, Tessera and The Dental Hauz.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://ahmedmohamedkhalilx-droid.github.io/tv-portfolio/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Ahmed Khalil | Web developer, Cairo">
+  <meta property="og:description" content="Websites and online stores in English and Arabic. Press a TV to open a project.">
+  <meta property="og:url" content="https://ahmedmohamedkhalilx-droid.github.io/tv-portfolio/">
+  <meta property="og:image" content="https://ahmedmohamedkhalilx-droid.github.io/tv-portfolio/assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="site">
     <h1>Ahmed Khalil</h1>
+    <p class="pitch">Web developer in Cairo. I build websites and online stores in English and Arabic, right-to-left included.</p>
+    <a class="cta" href="mailto:ahmedm.khalil@aucegypt.edu?subject=New%20project">Start a project</a>
   </header>
 
   <main class="stage">
@@ -30,17 +42,26 @@
           <p id="p-desc"></p>
         </div>
         <div class="actions">
+          <button id="study-toggle" type="button" aria-controls="study" aria-expanded="false">Case study</button>
           <a id="p-link" href="#" target="_blank" rel="noopener">Open in new tab &#8599;</a>
           <button id="close" type="button">&times; Close</button>
         </div>
       </div>
-      <div class="viewport" id="viewport"></div>
+      <div class="frame-body">
+        <div class="viewport" id="viewport"></div>
+        <aside class="study" id="study" aria-label="Case study"></aside>
+      </div>
     </div>
   </div>
 
   <footer>
-    <a href="mailto:ahmedm.khalil@aucegypt.edu">ahmedm.khalil@aucegypt.edu</a> &middot;
-    <a href="https://github.com/ahmedmohamedkhalilx-droid" target="_blank" rel="noopener">GitHub</a>
+    <h2 class="contact-title">Have a project in mind?</h2>
+    <p class="contact-line">Tell me what you need, and I will reply with how I would build it.</p>
+    <a class="cta" href="mailto:ahmedm.khalil@aucegypt.edu?subject=New%20project">Email me</a>
+    <p class="contact-links">
+      <a href="mailto:ahmedm.khalil@aucegypt.edu">ahmedm.khalil@aucegypt.edu</a> &middot;
+      <a href="https://github.com/ahmedmohamedkhalilx-droid" target="_blank" rel="noopener">GitHub</a>
+    </p>
   </footer>
 
   <script type="importmap">

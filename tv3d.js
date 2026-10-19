@@ -69,7 +69,8 @@ function labelTexture(label, sub, pal) {
   return t;
 }
 
-export function createTvs(container, tvConfigs, { onPress, onHover, onLayout }) {
+export function createTvs(container, tvConfigs, { onPress, onHover, onLayout, lite = false }) {
+  // lite (phones, data-saver): TVs show a still of each site and never load the live sites on the wall
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 300);
 
@@ -111,7 +112,6 @@ export function createTvs(container, tvConfigs, { onPress, onHover, onLayout }) 
     staticTex.needsUpdate = true;
   }
   drawStatic();
-  let tuning = 0; // screens still showing static
 
   function buildTv(cfg) {
     const g = new THREE.Group();
@@ -273,30 +273,43 @@ export function createTvs(container, tvConfigs, { onPress, onHover, onLayout }) 
     g.add(floor);
 
     let tune = null;
-    if (cfg.siteUrl) { // the live site, mapped onto the screen
-      const frame = document.createElement('iframe');
-      frame.src = cfg.siteUrl;
-      frame.title = cfg.title + ' live preview';
-      frame.tabIndex = -1;
-      frame.setAttribute('aria-hidden', 'true');
-      Object.assign(frame.style, { width: FRAME_PX.w + 'px', height: FRAME_PX.h + 'px', border: '0', background: '#0f1512', pointerEvents: 'none' });
-      const site = new CSS3DObject(frame);
-      site.position.set(SCREEN.x, SCREEN.y, screenZ);
-      site.scale.setScalar(SCREEN.w / FRAME_PX.w);
-      g.add(site);
+    if (cfg.siteUrl) {
+      if (!lite) { // the live site, mapped onto the screen
+        const frame = document.createElement('iframe');
+        frame.src = cfg.siteUrl;
+        frame.title = cfg.title + ' live preview';
+        frame.tabIndex = -1;
+        frame.setAttribute('aria-hidden', 'true');
+        Object.assign(frame.style, { width: FRAME_PX.w + 'px', height: FRAME_PX.h + 'px', border: '0', background: '#0f1512', pointerEvents: 'none' });
+        const site = new CSS3DObject(frame);
+        site.position.set(SCREEN.x, SCREEN.y, screenZ);
+        site.scale.setScalar(SCREEN.w / FRAME_PX.w);
+        g.add(site);
+        const tunedIn = () => { if (!entry.tuneOut) entry.tuneOut = performance.now() + 1600; }; // some sites report 'loaded' before they paint
+        frame.addEventListener('load', tunedIn);
+        setTimeout(tunedIn, 25000); // never cover a slow or blocked site for good
+      }
+      // in front of the screen until the live site is in: static, then a still of the site once that has loaded
       const tuneGeo = screen.geometry.clone(); // the live-site screen has shape-unit UVs; map them to 0..1 for the texture
       const uv = tuneGeo.attributes.uv;
       for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) / SCREEN.w + 0.5, uv.getY(i) / SCREEN.h + 0.5);
       tune = new THREE.Mesh(tuneGeo, new THREE.MeshBasicMaterial({ map: staticTex, toneMapped: false, transparent: true }));
       tune.position.set(SCREEN.x, SCREEN.y, screenZ + 0.004);
       g.add(tune);
-      tuning++;
-      const tunedIn = () => { if (!entry.tuneOut) entry.tuneOut = performance.now() + 300; };
-      frame.addEventListener('load', tunedIn);
-      setTimeout(tunedIn, 25000); // never leave static up for good if a site is slow or blocked
+      if (cfg.poster) {
+        new THREE.TextureLoader().load(cfg.poster, (tex) => {
+          tex.colorSpace = THREE.SRGBColorSpace;
+          tex.anisotropy = gl.capabilities.getMaxAnisotropy();
+          if (!entry.tune) return; // the live site already took over
+          entry.tune.material.map = tex;
+          entry.tune.material.needsUpdate = true;
+          entry.posterShown = true;
+          dirty = true;
+        });
+      }
     }
 
-    const entry = { id: cfg.id, group: g, screen, dials, antennas, floor, tune, tuneOut: 0, scale: 1, target: 1 };
+    const entry = { id: cfg.id, group: g, screen, dials, antennas, floor, tune, tuneOut: 0, posterShown: false, scale: 1, target: 1 };
     return entry;
   }
   const row = new THREE.Group(); // both TVs live in one row so they turn together and stay touching
@@ -386,12 +399,13 @@ export function createTvs(container, tvConfigs, { onPress, onHover, onLayout }) 
       }
     }
     const now = performance.now();
-    if (tuning > 0 && !reduceMotion && now - lastStatic > 80) { drawStatic(); lastStatic = now; dirty = true; }
+    const anyStatic = tvs.some((t) => t.tune && !t.posterShown);
+    if (anyStatic && !reduceMotion && now - lastStatic > 80) { drawStatic(); lastStatic = now; dirty = true; }
     for (const t of tvs) {
       if (!t.tune || !t.tuneOut || now < t.tuneOut) continue;
       const k = Math.min(1, (now - t.tuneOut) / 450);
       t.tune.material.opacity = 1 - k;
-      if (k >= 1) { t.group.remove(t.tune); t.tune = null; tuning--; }
+      if (k >= 1) { t.group.remove(t.tune); t.tune = null; }
       dirty = true;
     }
     if (!dirty) return;
