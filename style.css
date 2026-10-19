@@ -6,7 +6,7 @@
   --muted: #958f85;
   --gold: #d6bc92;
   --btn: #e4d2b2;
-  --tan: var(--gold); /* older rules (TVs, labels, project view) */
+  --tan: var(--gold); /* older rules (phones, labels, project view) */
   --sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
   --serif: "Instrument Serif", Georgia, serif;
   --mono: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
@@ -139,9 +139,9 @@ h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
 .js .reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
 .js .reveal.in { opacity: 1; transform: none; }
 
-/* ---------- the 3D TVs (three.js canvas) ---------- */
+/* ---------- the 3D phones (three.js canvas) ---------- */
 .work .stage { display: grid; place-items: center; margin-top: 3rem; padding: 0 1rem; }
-.wall { position: relative; width: min(1180px, 96vw); aspect-ratio: 2.05; } /* fits the three TVs side by side without dead bands above and below */
+.wall { position: relative; width: min(940px, 96vw); aspect-ratio: 1.55; } /* fits the three phones side by side without dead bands above and below */
 .wall { direction: ltr; } /* the 3D layers position their iframes from the left; keep that on the Arabic page too */
 .wall canvas { display: block; }
 .wall.no-3d { display: grid; place-items: center; color: var(--muted); aspect-ratio: auto; padding: 3rem 1rem; }
@@ -149,7 +149,7 @@ h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
 .hint-touch { display: none; }
 @media (hover: none) { .hint-hover { display: none; } .hint-touch { display: inline; } }
 
-/* ---------- project labels under the TVs ---------- */
+/* ---------- project labels under the phones ---------- */
 .open-row { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; margin: .25rem 0 0; padding: 0 1rem; }
 .open-row button {
   display: grid; gap: .3rem; justify-items: center; min-width: 13rem; padding: .85rem 1.1rem;
@@ -159,7 +159,7 @@ h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
 .open-row button:hover, .open-row button.is-hot { border-color: var(--gold); background: rgba(214, 188, 146, .06); }
 .label-name { font-size: 1rem; font-weight: 500; }
 .label-kind { font: 500 .66rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-/* TVs side by side: each label sits under its own TV (positions come from script.js) */
+/* each label sits under its own phone (positions come from script.js) */
 .open-row.aligned {
   display: grid; grid-template-columns: repeat(3, var(--label-w)); gap: 0; justify-content: start;
   padding: 0 0 0 var(--label-x); /* measured from the left edge: the row is laid out left to right in both languages */
@@ -168,7 +168,7 @@ h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
 [dir="rtl"] .open-row.aligned { direction: ltr; }
 [dir="rtl"] .open-row.aligned button { direction: rtl; }
 
-/* ---------- the project: the TV zooms to fill the page ---------- */
+/* ---------- the project: the phone screen zooms to fill the page ---------- */
 .project { position: fixed; inset: 0; z-index: 50; background: rgba(0, 0, 0, 0); transition: background .45s; }
 .project[hidden] { display: none; }
 .project.open { background: rgba(0, 0, 0, .9); }
@@ -221,8 +221,11 @@ h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
   .topnav a:not(.lang) { display: none; }
   .cards, .steps { grid-template-columns: 1fr; }
   .stats { grid-template-columns: repeat(3, 1fr); gap: .6rem; }
-  .wall { aspect-ratio: .68; width: min(400px, 94vw); } /* tall canvas: the TVs stack */
-  .open-row { flex-direction: column; align-items: stretch; width: min(22rem, 100% - 2rem); margin-inline: auto; }
+  .work .stage { padding: 0; }
+  .wall { width: 100vw; } /* the phones stay in a row; use the full width */
+  .open-row.aligned button { margin: 0 .2rem; padding-inline: .3rem; }
+  .open-row .label-name { font-size: .78rem; text-wrap: balance; }
+  .open-row .label-kind { display: none; }
   .frame { border-width: 8px; border-radius: 18px; }
   .bar { padding: .7rem .85rem; }
   .bar p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }

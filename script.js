@@ -1,4 +1,4 @@
-import { createTvs } from './tv3d.js?v=20261019d'; // bump v= on every release so browsers fetch the new files
+import { createPhones } from './phones3d.js?v=20261019e'; // bump v= on every release so browsers fetch the new files
 
 const LANG = document.documentElement.lang === 'ar' ? 'ar' : 'en';
 const BASE = new URL('.', import.meta.url); // the site root, so relative paths work from /ar/ as well
@@ -14,7 +14,7 @@ const PROJECTS = {
     title: 'HELCO',
     desc: 'Bilingual website for an Egyptian audit, tax and advisory firm.',
     url: 'https://helco-co.github.io/en/', // the root is a redirect page; going straight to /en/ loads faster
-    poster: 'assets/posters/helco.jpg',
+    poster: 'assets/posters/helco-m.jpg',
     study: {
       client: 'Hany ElAraby & Co., an audit, tax and advisory firm in Egypt.',
       brief: 'The firm\u2019s website lived on an old deployment whose source code had been lost, so it could not be changed. It needed a rebuild that the firm could keep growing, in English and Arabic.',
@@ -31,7 +31,7 @@ const PROJECTS = {
     title: 'The Dental Hauz',
     desc: 'WordPress website for a dental clinic, built from its brand sheet.',
     url: 'https://ahmedmohamedkhalilx-droid.github.io/The-dental-Website-/',
-    poster: 'assets/posters/dental.jpg',
+    poster: 'assets/posters/dental-m.jpg',
     study: {
       client: 'The Dental Hauz, a clinic for implants, oral surgery, clear aligners and cosmetic dentistry.',
       brief: 'A new website that looks like the clinic\u2019s brand, runs on WordPress so the team can manage it, and keeps everything the old site had, including the patient forms.',
@@ -49,7 +49,7 @@ const PROJECTS = {
     desc: 'Bilingual Shopify store for an Egyptian luxury linen house. A working copy: basket and checkout open the real store.',
     url: 'tessera-site/', // a static copy of the storefront (Shopify stores cannot be framed); refresh with tools/tessera-copy
     noLink: true,
-    poster: 'assets/posters/tessera.jpg',
+    poster: 'assets/posters/tessera-m.jpg',
     study: {
       client: 'Tessera Fine Linens, an Egyptian luxury bed and bath linen house.',
       brief: 'An online store that feels as considered as the product, in English and Arabic. Shopify\u2019s Dawn theme ships with no Arabic at all, so the whole right-to-left side had to be built.',
@@ -69,7 +69,7 @@ const PROJECTS_AR = {
   helco: {
     desc: 'موقع ثنائي اللغة لشركة مصرية في التدقيق والضرائب والاستشارات.',
     url: 'https://helco-co.github.io/ar/',
-    poster: 'assets/posters/helco-ar.jpg',
+    poster: 'assets/posters/helco-ar-m.jpg',
     study: {
       client: 'هاني العربي وشركاه، شركة تدقيق وضرائب واستشارات في مصر.',
       brief: 'كان موقع الشركة يعمل على نسخة قديمة فُقدت شيفرتها المصدرية، فلم يعد تعديله ممكناً. احتاجت الشركة إلى إعادة بنائه بشكل يسمح بتطويره باستمرار، بالعربية والإنجليزية.',
@@ -97,7 +97,7 @@ const PROJECTS_AR = {
   tessera: {
     desc: 'متجر شوبيفاي ثنائي اللغة لدار مصرية للمفروشات الفاخرة. نسخة تعمل فعلياً: السلة والدفع يفتحان المتجر الحقيقي.',
     url: 'tessera-site/ar/',
-    poster: 'assets/posters/tessera-ar.jpg',
+    poster: 'assets/posters/tessera-ar-m.jpg',
     study: {
       client: 'تيسيرا للمفروشات الفاخرة، دار مصرية لمفروشات السرير والحمّام.',
       brief: 'متجر إلكتروني بنفس عناية المنتج، بالعربية والإنجليزية. قالب Dawn من شوبيفاي لا يأتي بأي دعم للعربية، فكان لا بد من بناء كل ما يخص الكتابة من اليمين إلى اليسار.',
@@ -129,36 +129,30 @@ const pLink = document.getElementById('p-link');
 const study = document.getElementById('study');
 const studyToggle = document.getElementById('study-toggle');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-// the TVs on the wall show stills of the sites: always visible, and light (no three live sites at once);
-// the live site loads when a project is opened
-const lite = true;
-
 let tvs = null;
 let current = null;
 let lastTrigger = null;
 try {
-  tvs = createTvs(
+  tvs = createPhones(
     wall,
     [
       {
         id: 'helco', title: 'HELCO', siteUrl: PROJECTS.helco.url, poster: PROJECTS.helco.poster,
         // from helco-co.github.io: ground #0f1419, panels #1b2025, gold #a88c68
-        palette: { body: 0x1b2025, back: 0x12181e, bezel: 0x0f1419, accent: 0xa88c68, knob: 0xe1c19a, slot: 0x090e14 },
+        palette: { frame: 0xa88c68 }, // the HELCO gold
       },
       {
         id: 'tessera', title: 'Tessera', siteUrl: PROJECTS.tessera.url, poster: PROJECTS.tessera.poster,
         // Tessera brand palette: stone #C9C0B0, forest #363C31, burgundy #33161A, plum-black #211415
-        palette: {
-          body: 0x33161a, back: 0x211415, bezel: 0x211415, accent: 0xc9c0b0, knob: 0xc9c0b0, slot: 0x150b0c,
-        },
+        palette: { frame: 0x7a2c36 }, // burgundy, lifted so it reads as metal
       },
       {
         // brand sheet: umber #514A43, sage #657568 / #A8B6A5, blush #D8B8B2, cream #F4F0E8
         id: 'dental', title: 'The Dental Hauz', siteUrl: PROJECTS.dental.url, poster: PROJECTS.dental.poster,
-        palette: { body: 0x514a43, back: 0x3d3833, bezel: 0x2b2824, accent: 0xd8b8b2, knob: 0xa8b6a5, slot: 0x26231f },
+        palette: { frame: 0xa8b6a5 }, // sage
       },
     ],
-    { onPress: (id) => openProject(id), onHover: (id) => markHot(id), onLayout: () => alignLabels(), lite }
+    { onPress: (id) => openProject(id), onHover: (id) => markHot(id), onLayout: () => alignLabels() }
   );
 } catch (err) {
   // no WebGL: the buttons below still open the projects
@@ -204,7 +198,7 @@ function openProject(id) {
 
   project.hidden = false;
   document.body.style.overflow = 'hidden';
-  setRect(startRect(id)); // start exactly over the TV screen
+  setRect(startRect(id)); // start exactly over the phone screen
   frame.getBoundingClientRect(); // flush so the transition runs
   requestAnimationFrame(() => {
     project.classList.add('open');
@@ -233,8 +227,8 @@ studyToggle.addEventListener('click', () => setStudyOpen(studyToggle.getAttribut
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !project.hidden) closeProject(); });
 window.addEventListener('resize', () => { if (!project.hidden) setRect(fullRect()); });
 
-// The labels under the TVs: hovering or focusing a label raises its TV, hovering a TV lights its label,
-// and when the TVs stand side by side each label sits directly under its TV.
+// The labels under the phones: hovering or focusing a label raises its phone, hovering a phone lights its label,
+// and each label sits directly under its phone.
 const labelRow = document.querySelector('.open-row');
 const labels = [...labelRow.querySelectorAll('[data-open]')];
 function markHot(id) {
