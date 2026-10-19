@@ -69,7 +69,7 @@ function labelTexture(label, sub, pal) {
   return t;
 }
 
-export function createTvs(container, tvConfigs, { onPress }) {
+export function createTvs(container, tvConfigs, { onPress, onHover, onLayout }) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 300);
 
@@ -90,6 +90,28 @@ export function createTvs(container, tvConfigs, { onPress }) {
   // ----- shared materials
   const hole = new THREE.MeshBasicMaterial({ color: 0x000000, opacity: 0, blending: THREE.NoBlending, side: THREE.DoubleSide });
   const gloss = glossTexture();
+
+  // "tuning in": static on a live-site screen until its site has loaded, so the TV never sits there black
+  const staticCanvas = document.createElement('canvas');
+  staticCanvas.width = 96;
+  staticCanvas.height = 72;
+  const staticCtx = staticCanvas.getContext('2d');
+  const staticTex = new THREE.CanvasTexture(staticCanvas);
+  staticTex.colorSpace = THREE.SRGBColorSpace;
+  function drawStatic() {
+    const img = staticCtx.createImageData(96, 72);
+    for (let i = 0; i < img.data.length; i += 4) {
+      const v = 40 + Math.random() * 120;
+      img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+      img.data[i + 3] = 255;
+    }
+    staticCtx.putImageData(img, 0, 0);
+    staticCtx.fillStyle = 'rgba(0,0,0,0.25)';
+    for (let y = 0; y < 72; y += 3) staticCtx.fillRect(0, y, 96, 1);
+    staticTex.needsUpdate = true;
+  }
+  drawStatic();
+  let tuning = 0; // screens still showing static
 
   function buildTv(cfg) {
     const g = new THREE.Group();
@@ -250,11 +272,11 @@ export function createTvs(container, tvConfigs, { onPress }) {
     floor.receiveShadow = true;
     g.add(floor);
 
+    let tune = null;
     if (cfg.siteUrl) { // the live site, mapped onto the screen
       const frame = document.createElement('iframe');
       frame.src = cfg.siteUrl;
       frame.title = cfg.title + ' live preview';
-      frame.loading = 'lazy';
       frame.tabIndex = -1;
       frame.setAttribute('aria-hidden', 'true');
       Object.assign(frame.style, { width: FRAME_PX.w + 'px', height: FRAME_PX.h + 'px', border: '0', background: '#0f1512', pointerEvents: 'none' });
@@ -262,9 +284,20 @@ export function createTvs(container, tvConfigs, { onPress }) {
       site.position.set(SCREEN.x, SCREEN.y, screenZ);
       site.scale.setScalar(SCREEN.w / FRAME_PX.w);
       g.add(site);
+      const tuneGeo = screen.geometry.clone(); // the live-site screen has shape-unit UVs; map them to 0..1 for the texture
+      const uv = tuneGeo.attributes.uv;
+      for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) / SCREEN.w + 0.5, uv.getY(i) / SCREEN.h + 0.5);
+      tune = new THREE.Mesh(tuneGeo, new THREE.MeshBasicMaterial({ map: staticTex, toneMapped: false, transparent: true }));
+      tune.position.set(SCREEN.x, SCREEN.y, screenZ + 0.004);
+      g.add(tune);
+      tuning++;
+      const tunedIn = () => { if (!entry.tuneOut) entry.tuneOut = performance.now() + 300; };
+      frame.addEventListener('load', tunedIn);
+      setTimeout(tunedIn, 25000); // never leave static up for good if a site is slow or blocked
     }
 
-    return { id: cfg.id, group: g, screen, dials, antennas, floor, scale: 1, target: 1 };
+    const entry = { id: cfg.id, group: g, screen, dials, antennas, floor, tune, tuneOut: 0, scale: 1, target: 1 };
+    return entry;
   }
   const row = new THREE.Group(); // both TVs live in one row so they turn together and stay touching
   scene.add(row);
@@ -302,7 +335,7 @@ export function createTvs(container, tvConfigs, { onPress }) {
       t.floor.visible = !stacked || i === n - 1; // one ground shadow, under the bottom TV
     });
     row.rotation.y = 0; // straight-on front view
-    const spanW = stacked ? BODY.w + 2.2 : (n - 1) * stepX + BODY.w + 2.2;
+    const spanW = stacked ? BODY.w + 2.2 : (n - 1) * stepX + BODY.w + 4.4; // room at the sides for a TV raised on hover
     const spanH = stacked ? (n - 1) * stepY + BODY.h + 4.6 : 13;
     const t15 = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
     const dist = Math.max(spanW / (2 * t15 * aspect), spanH / (2 * t15)) * 1.04;
@@ -324,11 +357,13 @@ export function createTvs(container, tvConfigs, { onPress }) {
     camera.updateProjectionMatrix();
     layout(w / h);
     dirty = true;
+    if (onLayout) requestAnimationFrame(() => onLayout());
   }
   new ResizeObserver(resize).observe(container);
   resize();
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let lastStatic = 0;
   function loop() {
     requestAnimationFrame(loop);
     if (paused) return;
@@ -349,6 +384,15 @@ export function createTvs(container, tvConfigs, { onPress }) {
           dirty = true;
         }
       }
+    }
+    const now = performance.now();
+    if (tuning > 0 && !reduceMotion && now - lastStatic > 80) { drawStatic(); lastStatic = now; dirty = true; }
+    for (const t of tvs) {
+      if (!t.tune || !t.tuneOut || now < t.tuneOut) continue;
+      const k = Math.min(1, (now - t.tuneOut) / 450);
+      t.tune.material.opacity = 1 - k;
+      if (k >= 1) { t.group.remove(t.tune); t.tune = null; tuning--; }
+      dirty = true;
     }
     if (!dirty) return;
     dirty = false;
@@ -375,9 +419,17 @@ export function createTvs(container, tvConfigs, { onPress }) {
     return null;
   }
   const tvAt = (e) => pick(e)?.tv ?? null;
+  let pointerHot = null, labelHot = null;
+  function applyHot() {
+    const hot = pointerHot || labelHot;
+    for (const x of tvs) x.target = x === hot ? HOVER_SCALE : 1;
+  }
   function setHover(t) {
-    for (const x of tvs) x.target = x === t ? HOVER_SCALE : 1;
+    if (t === pointerHot) return;
+    pointerHot = t;
+    applyHot();
     gl.domElement.style.cursor = t ? 'pointer' : 'default';
+    if (onHover) onHover(t ? t.id : null);
   }
   gl.domElement.addEventListener('pointermove', (e) => setHover(tvAt(e)));
   gl.domElement.addEventListener('pointerleave', () => setHover(null));
@@ -408,5 +460,22 @@ export function createTvs(container, tvConfigs, { onPress }) {
       return { left: x0, top: y0, width: x1 - x0, height: y1 - y0 };
     },
     setPaused(p) { paused = p; dirty = true; },
+    // raise a TV from outside (its label is hovered or focused); null lowers it
+    highlight(id) { labelHot = tvs.find((x) => x.id === id) || null; applyHot(); },
+    // each TV's footprint in viewport pixels, at rest (ignores the hover lift)
+    anchors() {
+      const box = container.getBoundingClientRect();
+      row.updateMatrixWorld(true);
+      const toPx = (x, y) => {
+        const v = new THREE.Vector3(x, y, BODY.d / 2).applyMatrix4(row.matrixWorld).project(camera);
+        return { x: box.left + ((v.x + 1) / 2) * box.width, y: box.top + ((1 - v.y) / 2) * box.height };
+      };
+      return tvs.map((t) => {
+        const p = t.group.position;
+        const a = toPx(p.x - BODY.w / 2, p.y - BODY.h / 2 - FOOT_REACH);
+        const b = toPx(p.x + BODY.w / 2, p.y + BODY.h / 2);
+        return { id: t.id, left: a.x, right: b.x, top: b.y, bottom: a.y };
+      });
+    },
   };
 }

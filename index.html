@@ -13,14 +13,14 @@
   </header>
 
   <main class="stage">
-    <div class="wall" id="wall" aria-label="Three 3D TVs: HELCO, Tessera and The Dental Hauz. Hover to enlarge, press to open."></div>
+    <div class="wall" id="wall" aria-label="Three TVs, each showing a project: HELCO, Tessera and The Dental Hauz. Press a TV, or its label below, to open the project."></div>
   </main>
-  <p class="hint">Hover a TV to enlarge it, press it to open the project.</p>
-  <p class="open-row">
-    <button data-open="helco" type="button">&#9656; HELCO</button>
-    <button data-open="tessera" type="button">&#9656; Tessera</button>
-    <button data-open="dental" type="button">&#9656; The Dental Hauz</button>
-  </p>
+  <nav class="open-row" aria-label="Projects">
+    <button data-open="helco" type="button"><span class="label-name">HELCO</span><span class="label-kind">Audit &amp; tax firm · Next.js</span></button>
+    <button data-open="tessera" type="button"><span class="label-name">Tessera</span><span class="label-kind">Linen store · Shopify</span></button>
+    <button data-open="dental" type="button"><span class="label-name">The Dental Hauz</span><span class="label-kind">Dental clinic · WordPress</span></button>
+  </nav>
+  <p class="hint"><span class="hint-hover">Hover a TV to bring it forward, press it to open the project.</span><span class="hint-touch">Tap a TV to open the project.</span></p>
 
   <div class="project" id="project" hidden>
     <div class="frame" id="frame" role="dialog" aria-modal="true" aria-labelledby="p-title">

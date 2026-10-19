@@ -4,7 +4,7 @@ const PROJECTS = {
   helco: {
     title: 'HELCO',
     desc: 'Marketing site for Hany ElAraby & Co., an Egyptian audit, tax and advisory firm. Next.js, Tailwind and next-intl, in English and Arabic with full RTL.',
-    url: 'https://helco-co.github.io/',
+    url: 'https://helco-co.github.io/en/', // the root is a redirect page; going straight to /en/ loads faster
   },
   dental: {
     title: 'The Dental Hauz',
@@ -54,7 +54,7 @@ try {
         palette: { body: 0x514a43, back: 0x3d3833, bezel: 0x2b2824, accent: 0xd8b8b2, knob: 0xa8b6a5, slot: 0x26231f },
       },
     ],
-    { onPress: (id) => openProject(id) }
+    { onPress: (id) => openProject(id), onHover: (id) => markHot(id), onLayout: () => alignLabels() }
   );
 } catch (err) {
   // no WebGL: the buttons below still open the projects
@@ -92,6 +92,8 @@ function openProject(id) {
   const iframe = document.createElement('iframe');
   iframe.src = p.url;
   iframe.title = p.title + ' site';
+  viewport.classList.add('loading'); // 'Tuning in…' until the site arrives
+  iframe.addEventListener('load', () => viewport.classList.remove('loading'), { once: true });
   viewport.replaceChildren(iframe);
 
   project.hidden = false;
@@ -123,3 +125,29 @@ document.querySelectorAll('[data-open]').forEach((btn) => {
 closeBtn.addEventListener('click', closeProject);
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !project.hidden) closeProject(); });
 window.addEventListener('resize', () => { if (!project.hidden) setRect(fullRect()); });
+
+// The labels under the TVs: hovering or focusing a label raises its TV, hovering a TV lights its label,
+// and when the TVs stand side by side each label sits directly under its TV.
+const labelRow = document.querySelector('.open-row');
+const labels = [...labelRow.querySelectorAll('[data-open]')];
+function markHot(id) {
+  labels.forEach((b) => b.classList.toggle('is-hot', b.dataset.open === id));
+}
+labels.forEach((b) => {
+  const raise = () => { if (tvs) tvs.highlight(b.dataset.open); };
+  const lower = () => { if (tvs) tvs.highlight(null); };
+  b.addEventListener('pointerenter', raise);
+  b.addEventListener('pointerleave', lower);
+  b.addEventListener('focus', raise);
+  b.addEventListener('blur', lower);
+});
+function alignLabels() {
+  if (!tvs) return;
+  const spots = tvs.anchors();
+  const sideBySide = spots.every((s) => Math.abs(s.bottom - spots[0].bottom) < 4);
+  labelRow.classList.toggle('aligned', sideBySide);
+  if (!sideBySide) return;
+  const left = labelRow.parentElement.getBoundingClientRect().left;
+  labelRow.style.setProperty('--label-x', spots[0].left - left + 'px');
+  labelRow.style.setProperty('--label-w', (spots[spots.length - 1].right - spots[0].left) / spots.length + 'px');
+}
