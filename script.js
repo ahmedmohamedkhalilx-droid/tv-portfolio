@@ -1,4 +1,4 @@
-import { createPhones } from './phones3d.js?v=20261019g'; // bump v= on every release so browsers fetch the new files
+import { createPhones } from './phones3d.js?v=20261019h'; // bump v= on every release so browsers fetch the new files
 
 const LANG = document.documentElement.lang === 'ar' ? 'ar' : 'en';
 const BASE = new URL('.', import.meta.url); // the site root, so relative paths work from /ar/ as well

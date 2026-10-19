@@ -66,7 +66,6 @@ export function createPhones(container, phoneConfigs, { onPress, onHover, onLayo
   const glassMat = new THREE.MeshPhysicalMaterial({ // the black glass around the display
     color: 0x050505, roughness: 0.08, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.04, envMapIntensity: 1,
   });
-  const islandMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
 
   // the frame's outline, extruded with a rounded bevel so the edges catch the light
   const BEVEL = 0.08;
@@ -104,10 +103,6 @@ export function createPhones(container, phoneConfigs, { onPress, onHover, onLayo
         dirty = true;
       });
     }
-
-    const island = new THREE.Mesh(new THREE.ShapeGeometry(rrect(1.0, 0.3, 0.15), 24), islandMat);
-    island.position.set(0, SCREEN.h / 2 - 0.3, FRONT + 0.006);
-    g.add(island);
 
     const glare = new THREE.Mesh(
       panel(SCREEN.w, SCREEN.h, SCREEN.r),
