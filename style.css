@@ -32,56 +32,48 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
 .topnav a { text-decoration: none; opacity: .8; transition: opacity .2s; }
 .topnav a:hover { opacity: 1; }
 
-/* ---------- intro: the folded device ---------- */
+/* ---------- intro: an iPad that unlocks, then turns to landscape ---------- */
 .unfold { height: 260vh; position: relative; }
 .unfold-stage {
   position: sticky; top: 0; height: 100vh; overflow: hidden; display: grid; place-items: center; perspective: 1800px;
-  --H: min(66vh, calc(46vw / .74)); --W: calc(var(--H) * .74);
-  --open: 0; --zoom: 0; --lock: 1; --zoom-k: .28;
+  --H: min(66vh, 86vw); --W: calc(var(--H) * .75); /* portrait size; in landscape the long side (H) runs across */
+  --b: calc(var(--H) * .03); --SW: calc(var(--W) - 2 * var(--b)); --SH: calc(var(--H) - 2 * var(--b)); /* bezel, screen */
+  --unlock: 0; --turn: 0; --zoom: 0; --zoom-k: .28;
 }
-@media (max-aspect-ratio: 11/10) { .unfold-stage { --zoom-k: .03; } } /* open device already fills a tall screen */
+@media (max-aspect-ratio: 11/10) { .unfold-stage { --zoom-k: .03; } } /* the landscape iPad already fills a tall screen */
 .giant {
   position: absolute; inset: 0; margin: 0; display: flex; justify-content: space-between; align-items: center; padding: 0 2vw;
   font: 600 clamp(3.5rem, 17vw, 17rem) / .8 var(--sans); letter-spacing: -.045em; text-transform: uppercase; color: var(--ink);
   opacity: calc(1 - var(--zoom)); transform: scale(calc(1 + var(--zoom) * .12)); pointer-events: none;
 }
 .device {
-  position: relative; width: var(--W); height: var(--H); transform-style: preserve-3d;
-  transform: translateX(calc(var(--open) * var(--W) / 2)) scale(calc(1 + var(--zoom) * var(--zoom-k)));
+  position: relative; width: var(--W); height: var(--H); border-radius: calc(var(--H) * .06);
+  background: linear-gradient(145deg, #2a2723, #121110 40%, #0b0a09); border: 1.5px solid #3a362f;
+  box-shadow: 0 50px 110px rgba(0, 0, 0, .75), inset 0 0 0 1px rgba(255, 255, 255, .05);
+  transform: rotate(calc(var(--turn) * -90deg)) scale(calc(1 + var(--zoom) * var(--zoom-k)));
 }
-.half {
-  position: absolute; top: 0; width: var(--W); height: 100%; background: #0d0c0b;
-  border: 2px solid #2b2824; box-shadow: 0 40px 90px rgba(0, 0, 0, .7), inset 0 0 0 1px rgba(255, 255, 255, .04);
-  backface-visibility: hidden; overflow: hidden;
+.cam { /* front camera on the long edge: it ends up on top once the iPad is in landscape */
+  position: absolute; right: calc(var(--b) / 2 - 3px); top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #2c3440, #050607 70%);
 }
-.half-r { left: 0; border-radius: calc(28px - 22px * var(--open)) 28px 28px calc(28px - 22px * var(--open)); }
-.half-l {
-  left: calc(-1 * var(--W)); border-radius: 28px 6px 6px 28px;
-  transform-origin: right center; transform: rotateY(calc((1 - var(--open)) * 180deg));
-}
-.half-l::after { /* the panel darkens while it is turned away from the light */
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(90deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .75)); opacity: calc(1 - var(--open));
-}
-.screen { position: absolute; overflow: hidden; background: #070707; }
-.half-l .screen { inset: 9px 0 9px 9px; border-radius: 20px 0 0 20px; }
-.half-r .screen { inset: 9px 9px 9px 0; border-radius: 0 20px 20px 0; }
-.inner { /* one picture spanning both halves; each half shows its own part of it */
-  position: absolute; top: 0; height: 100%; width: calc(var(--W) * 2 - 18px);
-  display: flex; flex-direction: column; justify-content: space-between; padding: 8% 7% 5%;
+.screen { position: absolute; inset: var(--b); border-radius: calc(var(--H) * .032); overflow: hidden; background: #080706; }
+.home { /* the home screen counter-turns and reshapes from portrait to landscape, as an iPad's screen does */
+  position: absolute; left: 50%; top: 50%;
+  width: calc(var(--SW) + (var(--SH) - var(--SW)) * var(--turn)); height: calc(var(--SH) - (var(--SH) - var(--SW)) * var(--turn));
+  transform: translate(-50%, -50%) rotate(calc(var(--turn) * 90deg)) scale(calc(.92 + var(--unlock) * .08));
+  display: flex; flex-direction: column; justify-content: space-between; padding: 9% 7% 5%;
   background: radial-gradient(60% 70% at 70% 35%, rgba(214, 188, 146, .22), transparent 70%), radial-gradient(40% 50% at 20% 90%, rgba(214, 188, 146, .08), transparent 70%), #080706;
 }
-.half-l .inner { left: 0; }
-.half-r .inner { left: calc(-1 * (var(--W) - 9px)); opacity: calc(1 - var(--lock)); } /* hidden behind the lock screen, so no sliver peeks past it */
 .inner-body { align-self: flex-start; }
-.inner-eyebrow { margin: 0 0 1em; font: 500 calc(var(--W) * .028) var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
-.inner-title { margin: 0; font: 500 calc(var(--W) * .13) / .95 var(--sans); letter-spacing: -.035em; }
-.inner-nav { align-self: center; display: flex; gap: .3em; padding: .3em; border-radius: 99px; background: rgba(255, 255, 255, .07); font-size: calc(var(--W) * .03); }
+.inner-eyebrow { margin: 0 0 1em; font: 500 calc(var(--H) * .019) var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.inner-title { margin: 0; font: 500 calc(var(--H) * .085) / .95 var(--sans); letter-spacing: -.035em; }
+.inner-nav { align-self: center; display: flex; gap: .3em; padding: .3em; border-radius: 99px; background: rgba(255, 255, 255, .07); font-size: calc(var(--H) * .021); }
 .inner-nav a { text-decoration: none; padding: .45em 1em; border-radius: 99px; color: var(--ink); }
 .inner-nav a:first-child { background: var(--ink); color: #111; }
-.lock {
-  position: absolute; inset: 9px; z-index: 2; border-radius: 20px; padding: 14% 8% 7%;
-  display: flex; flex-direction: column; align-items: center; text-align: center; opacity: var(--lock);
+.lock { /* slides up and away as the iPad unlocks */
+  position: absolute; inset: 0; z-index: 2; border-radius: inherit;
+  transform: translateY(calc(var(--unlock) * -14%)); pointer-events: none; padding: 14% 8% 7%;
+  display: flex; flex-direction: column; align-items: center; text-align: center; opacity: calc(1 - var(--unlock) * 1.4);
   background: radial-gradient(80% 55% at 50% 30%, rgba(214, 188, 146, .28), transparent 70%), radial-gradient(70% 60% at 50% 115%, rgba(120, 96, 66, .35), transparent 70%), #0a0908;
 }
 .lock-time { margin: 0; font: 600 calc(var(--W) * .25) / 1 var(--sans); letter-spacing: -.04em; }
@@ -235,7 +227,7 @@ h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
   .frame.study-open .study { position: absolute; inset: 0; border-inline-start: 0; }
 }
 
-/* ---------- reduced motion: the device simply sits open, nothing slides ---------- */
+/* ---------- reduced motion: the iPad simply sits unlocked in landscape, nothing moves ---------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   * { transition: none !important; }

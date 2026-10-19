@@ -1,4 +1,4 @@
-import { createPhones } from './phones3d.js?v=20261019e'; // bump v= on every release so browsers fetch the new files
+import { createPhones } from './phones3d.js?v=20261019f'; // bump v= on every release so browsers fetch the new files
 
 const LANG = document.documentElement.lang === 'ar' ? 'ar' : 'en';
 const BASE = new URL('.', import.meta.url); // the site root, so relative paths work from /ar/ as well
@@ -273,22 +273,22 @@ function setStudyOpen(open) {
   studyToggle.textContent = open ? UI.hideStudy : UI.study;
 }
 
-// ---------- the intro: a folded device that opens as you scroll ----------
-// Progress p runs 0 → 1 across the intro section; the first 60% opens the device, the rest
-// pushes it forward and fades the big name, then the page scrolls on into the hero.
+// ---------- the intro: an iPad that unlocks, then turns to landscape, as you scroll ----------
+// Progress p runs 0 → 1 across the intro section: the first 30% unlocks it, the next 35% turns it,
+// the rest pushes it forward and fades the big name, then the page scrolls on into the hero.
 const unfold = document.querySelector('.unfold');
 const unfoldStage = unfold && unfold.querySelector('.unfold-stage');
 const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
 function updateUnfold() {
   if (!unfold) return;
-  if (reduceMotion) { unfoldStage.style.setProperty('--open', 1); unfoldStage.style.setProperty('--lock', 0); return; }
+  const set = (k, v) => unfoldStage.style.setProperty(k, v.toFixed(4));
+  if (reduceMotion) { set('--unlock', 1); set('--turn', 1); return; }
   const range = unfold.offsetHeight - window.innerHeight;
   const p = range > 0 ? clamp01(-unfold.getBoundingClientRect().top / range) : 1;
-  const open = easeInOut(clamp01(p / 0.6));
-  unfoldStage.style.setProperty('--open', open.toFixed(4));
-  unfoldStage.style.setProperty('--lock', clamp01(1 - open * 2.4).toFixed(4)); // the lock screen gives way early in the swing
-  unfoldStage.style.setProperty('--zoom', easeInOut(clamp01((p - 0.6) / 0.4)).toFixed(4));
+  set('--unlock', easeInOut(clamp01(p / 0.3)));
+  set('--turn', easeInOut(clamp01((p - 0.3) / 0.35)));
+  set('--zoom', easeInOut(clamp01((p - 0.65) / 0.35)));
 }
 let unfoldTicking = false;
 window.addEventListener('scroll', () => {
