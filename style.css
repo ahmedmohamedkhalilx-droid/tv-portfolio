@@ -71,8 +71,6 @@ footer { text-align: center; padding: 1.5rem 1rem 2rem; color: var(--muted); bor
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
-.soon { height: 100%; display: grid; place-content: center; gap: .5rem; text-align: center; color: var(--muted); }
-.soon b { color: var(--ink); letter-spacing: .14em; text-transform: uppercase; }
 .open-row { display: flex; gap: .8rem; justify-content: center; flex-wrap: wrap; text-align: center; margin: 0 0 1rem; }
 .open-row button {
   background: transparent; color: var(--ink); border: 1px solid var(--line); border-radius: 6px;
@@ -80,26 +78,5 @@ footer { text-align: center; padding: 1.5rem 1rem 2rem; color: var(--muted); bor
 }
 .open-row button:hover, .open-row button:focus-visible { border-color: var(--teal); color: var(--teal); outline: none; }
 
-.shots { height: 100%; overflow-y: auto; background: #0f0b0c; }
-.shots img { display: block; width: 100%; height: auto; }
 
-.scrub { height: 100%; overflow-y: auto; position: relative; background: #0f0b0c; outline: none; }
-.scrub-track { width: 1px; position: absolute; top: 0; left: 0; visibility: hidden; }
-.scrub-stage { position: sticky; top: 0; height: 100%; display: grid; place-items: center; }
-.scrub-stage canvas { width: 100%; height: 100%; object-fit: contain; display: block; }
-.scrub-hint {
-  position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%);
-  background: rgba(15, 11, 12, .8); color: #c9c0b0; border: 1px solid #33161a;
-  padding: .35rem .9rem; border-radius: 999px; font-size: .8rem; letter-spacing: .08em; transition: opacity .4s;
-}
-.scrub-hint.gone { opacity: 0; }
 
-.pages { height: 100%; display: flex; flex-direction: column; }
-.pages-tabs { display: flex; gap: .4rem; padding: .5rem .8rem; background: #1a1012; border-bottom: 1px solid #33161a; overflow-x: auto; }
-.pages-tabs button {
-  background: transparent; color: #c9c0b0; border: 1px solid #33161a; border-radius: 999px;
-  padding: .3rem .9rem; font: inherit; font-size: .8rem; letter-spacing: .06em; cursor: pointer; white-space: nowrap;
-}
-.pages-tabs button[aria-selected="true"] { background: #c9c0b0; color: #211415; border-color: #c9c0b0; }
-.pages-tabs button:hover:not([aria-selected="true"]) { border-color: #c9c0b0; }
-.pages-view { flex: 1; min-height: 0; }
