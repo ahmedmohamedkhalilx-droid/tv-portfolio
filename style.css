@@ -27,16 +27,16 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
   position: fixed; inset: 0 0 auto; z-index: 40; display: flex; justify-content: space-between; align-items: center;
   padding: 1.1rem clamp(1.25rem, 3vw, 2.5rem); mix-blend-mode: difference; color: #fff;
 }
-.brand { font-weight: 600; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; font-size: .9rem; }
+.brand { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; font-size: .9rem; }
 .topnav { display: flex; gap: clamp(.9rem, 2vw, 1.75rem); font-size: .85rem; }
-.topnav a { text-decoration: none; opacity: .8; transition: opacity .2s; }
+.topnav a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; justify-content: center; text-decoration: none; opacity: .8; transition: opacity .2s; } /* a full-size tap target */
 .topnav a:hover { opacity: 1; }
 
 /* ---------- intro: an iPad that unlocks, then turns to landscape ---------- */
 .unfold { height: 260vh; position: relative; }
 .unfold-stage {
   position: sticky; top: 0; height: 100vh; overflow: hidden; display: grid; place-items: center; perspective: 1800px;
-  --H: min(66vh, 86vw); --W: calc(var(--H) * .75); /* portrait size; in landscape the long side (H) runs across */
+  --H: min(66vh, 92vw); --W: calc(var(--H) * .75); /* portrait size; in landscape the long side (H) runs across */
   --b: calc(var(--H) * .03); --SW: calc(var(--W) - 2 * var(--b)); --SH: calc(var(--H) - 2 * var(--b)); /* bezel, screen */
   --unlock: 0; --turn: 0; --zoom: 0; --zoom-k: .28;
 }
@@ -124,7 +124,7 @@ h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
 .contact { text-align: start; }
 .contact .btn { margin-top: 2.2rem; }
 .contact-links { display: flex; flex-wrap: wrap; gap: 1rem 2.2rem; margin: 3rem 0 0; padding-top: 1.4rem; border-top: 1px solid var(--line); font: 500 .75rem var(--mono); letter-spacing: .14em; text-transform: uppercase; }
-.contact-links a { text-decoration: none; color: var(--muted); }
+.contact-links a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; color: var(--muted); }
 .contact-links a:hover { color: var(--gold); }
 
 /* scroll reveals (only when JavaScript runs, so the page never hides its content without it) */
@@ -184,6 +184,7 @@ h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
   padding: .45rem .9rem; cursor: pointer; font: inherit; font-size: .85rem;
 }
 .actions button:hover { border-color: var(--gold); }
+@media (pointer: coarse) { .actions button, .actions a { display: inline-flex; align-items: center; min-height: 44px; } } /* touch: full-size buttons */
 .frame-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr); position: relative; }
 .frame.study-open .frame-body { grid-template-columns: minmax(0, 1fr) min(24rem, 34vw); }
 .viewport { background: var(--panel); min-height: 0; position: relative; }
@@ -205,6 +206,7 @@ h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
 .viewport.loading iframe { opacity: 0; }
 
 /* ---------- smaller screens ---------- */
+@media (max-width: 1000px) { .open-row .label-kind { display: none; } } /* label slots under the phones are too narrow for the details; the case study has them */
 @media (max-width: 900px) {
   .split { grid-template-columns: 1fr; }
   .steps { grid-template-columns: repeat(2, 1fr); }
@@ -214,7 +216,10 @@ h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
   .cards, .steps { grid-template-columns: 1fr; }
   .stats { grid-template-columns: repeat(3, 1fr); gap: .6rem; }
   .work .stage { padding: 0; }
-  .wall { width: 100vw; } /* the phones stay in a row; use the full width */
+  .wall { width: 100vw; aspect-ratio: 1.3; } /* the phones stay in a row, closer together so each is bigger */
+  .hero .eyebrow .rule { display: inline-block; width: 1rem; vertical-align: middle; margin: 0 .5rem; } /* a short rule, so the line wraps cleanly */
+  .hero .eyebrow { display: block; line-height: 1.8; }
+  .hero .eyebrow .dot { display: inline-block; vertical-align: middle; margin-inline-end: .6rem; }
   .open-row.aligned button { margin: 0 .2rem; padding-inline: .3rem; }
   .open-row .label-name { font-size: .78rem; text-wrap: balance; }
   .open-row .label-kind { display: none; }

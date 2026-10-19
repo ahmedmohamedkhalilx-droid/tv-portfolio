@@ -8,6 +8,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 const PHONE = { w: 3.6, h: 7.5, d: 0.36, r: 0.62 };       // outer size of the frame
 const SCREEN = { w: 3.26, h: 7.06, r: 0.44 };              // 390 × 844 stills fit this exactly
 const GAP = 1.25;                                          // air between neighbours
+const GAP_TIGHT = 0.5;                                     // on a narrow wall the phones sit closer so each one is bigger
 const HOVER_SCALE = 1.07;
 const FRONT = PHONE.d / 2;
 
@@ -155,11 +156,14 @@ export function createPhones(container, phoneConfigs, { onPress, onHover, onLayo
   scene.add(rim);
 
   // ----- layout: three phones in a row, seen straight on
+  let gap = GAP;
   function layout(aspect) {
     const n = phones.length;
-    const step = PHONE.w + GAP;
+    const tight = aspect < 1.4;
+    gap = tight ? GAP_TIGHT : GAP;
+    const step = PHONE.w + gap;
     phones.forEach((p, i) => p.group.position.set((i - (n - 1) / 2) * step, 0, 0));
-    const spanW = (n - 1) * step + PHONE.w + 1.6; // room at the sides for a phone raised on hover
+    const spanW = (n - 1) * step + PHONE.w + (tight ? 0.5 : 1.6); // room at the sides for a phone raised on hover
     const spanH = PHONE.h + 1.6;
     const t = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
     const dist = Math.max(spanW / (2 * t * aspect), spanH / (2 * t)) * 1.04;
@@ -263,8 +267,8 @@ export function createPhones(container, phoneConfigs, { onPress, onHover, onLayo
         const v = new THREE.Vector3(x, y, FRONT).applyMatrix4(row.matrixWorld).project(camera);
         return { x: box.left + ((v.x + 1) / 2) * box.width, y: box.top + ((1 - v.y) / 2) * box.height };
       };
-      const step = PHONE.w + GAP;
-      const slot = PHONE.w + GAP * 0.6; // a phone plus most of its share of the gap: room for a label under it
+      const step = PHONE.w + gap;
+      const slot = PHONE.w + gap * 0.6; // a phone plus most of its share of the gap: room for a label under it
       return phones.map((p, i) => {
         const cx = (i - (phones.length - 1) / 2) * step;
         const a = toPx(cx - slot / 2, -PHONE.h / 2);
