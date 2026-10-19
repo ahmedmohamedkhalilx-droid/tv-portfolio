@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>أحمد خليل | مطوّر مواقع</title>
+  <meta name="description" content="أحمد خليل، مطوّر مواقع في القاهرة. مواقع ومتاجر إلكترونية بالعربية والإنجليزية: HELCO وTessera وThe Dental Hauz.">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://ahmedmohamedkhalilx-droid.github.io/tv-portfolio/ar/">
+  <link rel="alternate" hreflang="en" href="https://ahmedmohamedkhalilx-droid.github.io/tv-portfolio/">
+  <link rel="alternate" hreflang="ar" href="https://ahmedmohamedkhalilx-droid.github.io/tv-portfolio/ar/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ar_EG">
+  <meta property="og:title" content="أحمد خليل | مطوّر مواقع في القاهرة">
+  <meta property="og:description" content="مواقع ومتاجر إلكترونية بالعربية والإنجليزية. اضغط على شاشة لفتح المشروع.">
+  <meta property="og:url" content="https://ahmedmohamedkhalilx-droid.github.io/tv-portfolio/ar/">
+  <meta property="og:image" content="https://ahmedmohamedkhalilx-droid.github.io/tv-portfolio/assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600&display=swap">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header class="site">
+    <a class="lang" href="../" hreflang="en" lang="en">English</a>
+    <h1>أحمد خليل</h1>
+    <p class="pitch">مطوّر مواقع في القاهرة. أبني مواقع ومتاجر إلكترونية بالعربية والإنجليزية، مع دعم كامل للكتابة من اليمين إلى اليسار.</p>
+    <a class="cta" href="mailto:ahmedm.khalil@aucegypt.edu?subject=%D9%85%D8%B4%D8%B1%D9%88%D8%B9%20%D8%AC%D8%AF%D9%8A%D8%AF">ابدأ مشروعك</a>
+  </header>
+
+  <main class="stage">
+    <div class="wall" id="wall" aria-label="ثلاث شاشات، تعرض كل منها مشروعاً: HELCO وTessera وThe Dental Hauz. اضغط على شاشة، أو على اسمها بالأسفل، لفتح المشروع."></div>
+  </main>
+  <nav class="open-row" aria-label="المشاريع">
+    <button data-open="helco" type="button"><span class="label-name">HELCO</span><span class="label-kind">شركة تدقيق وضرائب · Next.js</span></button>
+    <button data-open="tessera" type="button"><span class="label-name">Tessera</span><span class="label-kind">متجر مفروشات · Shopify</span></button>
+    <button data-open="dental" type="button"><span class="label-name">The Dental Hauz</span><span class="label-kind">عيادة أسنان · WordPress</span></button>
+  </nav>
+  <p class="hint"><span class="hint-hover">مرّر المؤشر على شاشة لتقريبها، واضغط عليها لفتح المشروع.</span><span class="hint-touch">اضغط على شاشة لفتح المشروع.</span></p>
+
+  <div class="project" id="project" hidden>
+    <div class="frame" id="frame" role="dialog" aria-modal="true" aria-labelledby="p-title">
+      <div class="bar">
+        <div class="info">
+          <h2 id="p-title"></h2>
+          <p id="p-desc"></p>
+        </div>
+        <div class="actions">
+          <button id="study-toggle" type="button" aria-controls="study" aria-expanded="false">دراسة الحالة</button>
+          <a id="p-link" href="#" target="_blank" rel="noopener">افتح في نافذة جديدة &#8599;</a>
+          <button id="close" type="button">&times; إغلاق</button>
+        </div>
+      </div>
+      <div class="frame-body">
+        <div class="viewport" id="viewport" data-loading="جارٍ ضبط الإشارة…"></div>
+        <aside class="study" id="study" aria-label="دراسة الحالة"></aside>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <h2 class="contact-title">لديك مشروع في بالك؟</h2>
+    <p class="contact-line">أخبرني بما تحتاجه، وسأرد عليك بالطريقة التي سأبنيه بها.</p>
+    <a class="cta" href="mailto:ahmedm.khalil@aucegypt.edu?subject=%D9%85%D8%B4%D8%B1%D9%88%D8%B9%20%D8%AC%D8%AF%D9%8A%D8%AF">راسلني</a>
+    <p class="contact-links">
+      <a href="mailto:ahmedm.khalil@aucegypt.edu" dir="ltr">ahmedm.khalil@aucegypt.edu</a> &middot;
+      <a href="https://github.com/ahmedmohamedkhalilx-droid" target="_blank" rel="noopener">GitHub</a>
+    </p>
+  </footer>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="../script.js"></script>
+</body>
+</html>

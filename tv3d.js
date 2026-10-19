@@ -285,7 +285,7 @@ export function createTvs(container, tvConfigs, { onPress, onHover, onLayout, li
         site.position.set(SCREEN.x, SCREEN.y, screenZ);
         site.scale.setScalar(SCREEN.w / FRAME_PX.w);
         g.add(site);
-        const tunedIn = () => { if (!entry.tuneOut) entry.tuneOut = performance.now() + 1600; }; // some sites report 'loaded' before they paint
+        const tunedIn = () => { if (!entry.tuneOut) entry.tuneOut = performance.now() + 3000; }; // some sites report 'loaded' before they paint
         frame.addEventListener('load', tunedIn);
         setTimeout(tunedIn, 25000); // never cover a slow or blocked site for good
       }

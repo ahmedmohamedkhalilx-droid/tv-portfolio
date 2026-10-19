@@ -1,5 +1,13 @@
 import { createTvs } from './tv3d.js';
 
+const LANG = document.documentElement.lang === 'ar' ? 'ar' : 'en';
+const BASE = new URL('.', import.meta.url); // the site root, so relative paths work from /ar/ as well
+const at = (path) => new URL(path, BASE).href;
+const UI = {
+  en: { study: 'Case study', hideStudy: 'Hide case study', client: 'Client', brief: 'The brief', built: 'What I built', stack: 'Built with', site: 'site', no3d: '3D view is not available in this browser.' },
+  ar: { study: 'دراسة الحالة', hideStudy: 'إخفاء دراسة الحالة', client: 'العميل', brief: 'المطلوب', built: 'ما بنيته', stack: 'الأدوات المستخدمة', site: 'الموقع', no3d: 'العرض ثلاثي الأبعاد غير متاح في هذا المتصفح.' },
+}[LANG];
+
 // Case studies are written from each project's own README; keep them to facts the client would recognise.
 const PROJECTS = {
   helco: {
@@ -56,6 +64,60 @@ const PROJECTS = {
   },
 };
 
+// Arabic copy for the Arabic page; HELCO and Tessera open their Arabic sites (The Dental Hauz has none)
+const PROJECTS_AR = {
+  helco: {
+    desc: 'موقع ثنائي اللغة لشركة مصرية في التدقيق والضرائب والاستشارات.',
+    url: 'https://helco-co.github.io/ar/',
+    poster: 'assets/posters/helco-ar.jpg',
+    study: {
+      client: 'هاني العربي وشركاه، شركة تدقيق وضرائب واستشارات في مصر.',
+      brief: 'كان موقع الشركة يعمل على نسخة قديمة فُقدت شيفرتها المصدرية، فلم يعد تعديله ممكناً. احتاجت الشركة إلى إعادة بنائه بشكل يسمح بتطويره باستمرار، بالعربية والإنجليزية.',
+      built: [
+        'أعدت بناء كل صفحات الموقع القديم في مشروع Next.js نظيف.',
+        'العربية والإنجليزية في كل الصفحات، مع تخطيط كامل من اليمين إلى اليسار للعربية.',
+        'صفحة خدمات منظمة في 3 محاور و19 مجموعة و124 خدمة، إلى جانب صفحات لأربعة قطاعات وللتوظيف والتواصل.',
+        'نشر تلقائي على نطاق الشركة مع كل تعديل.',
+      ],
+    },
+  },
+  dental: {
+    desc: 'موقع ووردبريس لعيادة أسنان، مبني على الهوية البصرية للعيادة.',
+    study: {
+      client: 'ذا دنتال هاوز، عيادة متخصصة في زراعة الأسنان وجراحة الفم وتقويم الأسنان الشفاف وتجميل الأسنان.',
+      brief: 'موقع جديد يعكس هوية العيادة، ويعمل على ووردبريس ليتمكن الفريق من إدارته، ويحتفظ بكل ما كان في الموقع القديم بما في ذلك نماذج المرضى.',
+      built: [
+        'قالب ووردبريس مخصص مصمم من دليل الهوية البصرية للعيادة: ألوانها وخطوطها وصورها.',
+        'نقل كل صفحات الموقع القديم، مع فحص تلقائي يطابقها بنصوص الموقع القديم.',
+        'نماذج مرضى تعمل فعلياً (التاريخ الطبي، وطلب السجلات، واتفاقيات الدفع)، مختبرة من البداية إلى النهاية على ووردبريس حقيقي وبريد إلكتروني حقيقي.',
+        '84 اختباراً آلياً في المتصفح على مقاسات الكمبيوتر والهاتف، تعمل مع كل تعديل.',
+      ],
+    },
+  },
+  tessera: {
+    desc: 'متجر شوبيفاي ثنائي اللغة لدار مصرية للمفروشات الفاخرة. نسخة تعمل فعلياً: السلة والدفع يفتحان المتجر الحقيقي.',
+    url: 'tessera-site/ar/',
+    poster: 'assets/posters/tessera-ar.jpg',
+    study: {
+      client: 'تيسيرا للمفروشات الفاخرة، دار مصرية لمفروشات السرير والحمّام.',
+      brief: 'متجر إلكتروني بنفس عناية المنتج، بالعربية والإنجليزية. قالب Dawn من شوبيفاي لا يأتي بأي دعم للعربية، فكان لا بد من بناء كل ما يخص الكتابة من اليمين إلى اليسار.',
+      built: [
+        'نحو ثلاثين قسماً مخصصاً وخمسين جزءاً برمجياً فوق قالب Dawn من شوبيفاي.',
+        'طبقة كاملة للكتابة من اليمين إلى اليسار مكتوبة قاعدة بقاعدة، بخطوط عربية وأسعار تبقى مقروءة داخل النص العربي، ومفتاح لغة يتذكر اختيار الزائر.',
+        'صفحات مجموعات ترتّب نفسها من إعدادات لوحة تحكم شوبيفاي، فيضيف المالك مجموعات جديدة دون لمس الشيفرة.',
+        'صفحات «تسوّق الطقم» مع أداة لتجميع الطقم وخصم عليه، وعينات ألوان مولّدة من صور المنتجات.',
+      ],
+    },
+  },
+};
+if (LANG === 'ar') {
+  for (const [id, ar] of Object.entries(PROJECTS_AR)) {
+    const p = PROJECTS[id];
+    Object.assign(p, ar, { study: { ...p.study, ...ar.study } }); // the stack line stays as it is
+  }
+}
+for (const p of Object.values(PROJECTS)) { p.url = at(p.url); p.poster = at(p.poster); }
+
 const wall = document.getElementById('wall');
 const project = document.getElementById('project');
 const frame = document.getElementById('frame');
@@ -100,7 +162,7 @@ try {
 } catch (err) {
   // no WebGL: the buttons below still open the projects
   wall.classList.add('no-3d');
-  wall.textContent = '3D view is not available in this browser.';
+  wall.textContent = UI.no3d;
 }
 
 function setRect(r) {
@@ -132,7 +194,7 @@ function openProject(id) {
   pLink.href = p.url;
   const iframe = document.createElement('iframe');
   iframe.src = p.url;
-  iframe.title = p.title + ' site';
+  iframe.title = p.title + ' ' + UI.site;
   viewport.classList.add('loading'); // 'Tuning in…' until the site arrives
   iframe.addEventListener('load', () => viewport.classList.remove('loading'), { once: true });
   viewport.replaceChildren(iframe);
@@ -203,15 +265,15 @@ function renderStudy(p) {
   const list = el('ul');
   s.built.forEach((item) => list.append(el('li', item)));
   study.replaceChildren(
-    el('h3', 'Client'), el('p', s.client),
-    el('h3', 'The brief'), el('p', s.brief),
-    el('h3', 'What I built'), list,
-    el('h3', 'Built with'), el('p', s.stack),
+    el('h3', UI.client), el('p', s.client),
+    el('h3', UI.brief), el('p', s.brief),
+    el('h3', UI.built), list,
+    el('h3', UI.stack), el('p', s.stack),
   );
   study.scrollTop = 0;
 }
 function setStudyOpen(open) {
   frame.classList.toggle('study-open', open);
   studyToggle.setAttribute('aria-expanded', String(open));
-  studyToggle.textContent = open ? 'Hide case study' : 'Case study';
+  studyToggle.textContent = open ? UI.hideStudy : UI.study;
 }

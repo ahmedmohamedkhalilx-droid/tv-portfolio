@@ -21,7 +21,9 @@ body {
 }
 a { color: var(--tan); }
 
-.site { text-align: center; padding: 1.75rem 1rem 0; }
+.site { text-align: center; padding: 1.75rem 1rem 0; position: relative; }
+.lang { position: absolute; top: 1rem; inset-inline-end: 1.25rem; font-size: .85rem; color: var(--muted); text-decoration: none; padding: .3rem .5rem; border-radius: 6px; }
+.lang:hover { color: var(--ink); }
 .site h1 { margin: 0; font-size: clamp(1.6rem, 4.5vw, 2.4rem); letter-spacing: .14em; text-transform: uppercase; font-weight: 600; }
 .pitch { margin: .9rem auto 0; max-width: 46ch; color: var(--muted); line-height: 1.55; font-size: .95rem; }
 .site .cta { margin-top: 1.1rem; }
@@ -42,6 +44,7 @@ a { color: var(--tan); }
 /* ---------- the 3D TV (three.js canvas) ---------- */
 .stage { flex: 1; display: grid; place-items: center; padding: .25rem 1rem 0; }
 .wall { position: relative; width: min(1180px, 96vw); aspect-ratio: 2.05; } /* fits the three TVs side by side without dead bands above and below */
+.wall { direction: ltr; } /* the 3D layers position their iframes from the left; keep that on the Arabic page too */
 .wall canvas { display: block; }
 .wall.no-3d { display: grid; place-items: center; color: var(--muted); aspect-ratio: auto; padding: 3rem 1rem; }
 
@@ -85,16 +88,16 @@ footer { text-align: center; padding: 3rem 1rem 2.5rem; color: var(--muted); bor
 .viewport { background: var(--panel); min-height: 0; position: relative; }
 .study {
   display: none; overflow-y: auto; padding: 1.4rem 1.5rem 2rem; background: var(--bg);
-  border-left: 1px solid var(--line); font-size: .85rem; line-height: 1.6; color: var(--ink);
+  border-inline-start: 1px solid var(--line); font-size: .85rem; line-height: 1.6; color: var(--ink);
 }
 .frame.study-open .study { display: block; }
 .study h3 { margin: 1.6rem 0 .45rem; font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--tan); font-weight: 600; }
 .study h3:first-child { margin-top: 0; }
 .study p { margin: 0; color: #c9d1cb; }
-.study ul { margin: 0; padding-left: 1.1rem; color: #c9d1cb; }
+.study ul { margin: 0; padding-inline-start: 1.1rem; color: #c9d1cb; }
 .study li + li { margin-top: .5rem; }
 .viewport::before { /* shown behind the site while it loads */
-  content: "Tuning in…"; position: absolute; inset: 0; display: grid; place-items: center;
+  content: attr(data-loading); position: absolute; inset: 0; display: grid; place-items: center;
   color: var(--muted); font-size: .8rem; letter-spacing: .16em; text-transform: uppercase;
 }
 .viewport iframe { position: relative; width: 100%; height: 100%; border: 0; display: block; transition: opacity .35s ease-out; }
@@ -108,7 +111,7 @@ footer { text-align: center; padding: 3rem 1rem 2.5rem; color: var(--muted); bor
   .actions { flex-direction: column-reverse; align-items: flex-end; gap: .4rem; }
   /* phones: the case study covers the site instead of sitting beside it */
   .frame.study-open .frame-body { grid-template-columns: minmax(0, 1fr); }
-  .frame.study-open .study { position: absolute; inset: 0; border-left: 0; }
+  .frame.study-open .study { position: absolute; inset: 0; border-inline-start: 0; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
@@ -124,10 +127,20 @@ footer { text-align: center; padding: 3rem 1rem 2.5rem; color: var(--muted); bor
 .label-kind { font-size: .75rem; color: var(--muted); }
 /* TVs side by side: each label sits under its own TV (positions come from script.js) */
 .open-row.aligned {
-  display: grid; grid-template-columns: repeat(3, var(--label-w)); gap: 0;
-  align-self: flex-start; margin-left: var(--label-x); padding: 0;
+  display: grid; grid-template-columns: repeat(3, var(--label-w)); gap: 0; justify-content: start;
+  align-self: stretch; padding: 0 0 0 var(--label-x); /* measured from the left edge: the row is laid out left to right in both languages */
 }
 .open-row.aligned button { min-width: 0; margin: 0 .6rem; }
+/* the TVs keep their left-to-right order on the Arabic page, so the aligned labels do too */
+[dir="rtl"] .open-row.aligned { direction: ltr; }
+[dir="rtl"] .open-row.aligned button { direction: rtl; }
+
+/* Arabic page: an Arabic typeface, and no letter-spacing (it breaks the joins between Arabic letters) */
+:lang(ar) body, body:lang(ar) { font-family: "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif; }
+:lang(ar) :is(.site h1, .label-name, .bar h2, .study h3, .contact-title, .cta) { letter-spacing: 0; }
+:lang(ar) .viewport::before { letter-spacing: 0; }
+:lang(ar) .site h1 { font-size: clamp(1.9rem, 5vw, 2.7rem); }
+:lang(ar) .pitch, :lang(ar) .contact-line, :lang(ar) .study { line-height: 1.8; }
 @media (max-width: 700px) {
   .open-row { flex-direction: column; align-items: stretch; width: min(22rem, 100%); align-self: center; }
 }
