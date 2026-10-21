@@ -13,11 +13,11 @@
   --ease: cubic-bezier(.2, .7, .2, 1);
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: auto; } /* the page scroll drives the iPad; jumps are animated in script.js */
 body { margin: 0; color: var(--ink); background: var(--bg); font-family: var(--sans); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 a { color: inherit; }
 em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--gold); }
-.container { width: min(1200px, 100% - 2.5rem); margin-inline: auto; }
+.container { width: min(1200px, 100% - clamp(2.5rem, 8cqi, 6rem)); margin-inline: auto; }
 
 /* one focus ring for every control */
 :where(a, button):focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
@@ -32,69 +32,107 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
 .topnav a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; justify-content: center; text-decoration: none; opacity: .8; transition: opacity .2s; } /* a full-size tap target */
 .topnav a:hover { opacity: 1; }
 
-/* ---------- intro: an iPad that unlocks, then turns to landscape ---------- */
-.unfold { height: 260vh; position: relative; }
-.unfold-stage {
-  position: sticky; top: 0; height: 100vh; overflow: hidden; display: grid; place-items: center; perspective: 1800px;
-  --H: min(66vh, 92vw); --W: calc(var(--H) * .75); /* portrait size; in landscape the long side (H) runs across */
-  --b: calc(var(--H) * .03); --SW: calc(var(--W) - 2 * var(--b)); --SH: calc(var(--H) - 2 * var(--b)); /* bezel, screen */
-  --unlock: 0; --turn: 0; --zoom: 0; --zoom-k: .28;
+/* ---------- the iPad: the whole site plays on its screen ----------
+   script.js sizes the device (--dw × --dh, landscape on wide windows, portrait on tall ones) and drives
+   the turn, the unlock and the scroll of the site inside the screen from the page scroll. */
+.runway { position: relative; height: 100vh; } /* the real height is set by script.js */
+.stage {
+  position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; place-items: center;
+  --dw: min(92vw, 1200px); --dh: min(80vh, 750px); --b: 14px; --lw: 360px;
 }
-@media (max-aspect-ratio: 11/10) { .unfold-stage { --zoom-k: .03; } } /* the landscape iPad already fills a tall screen */
 .giant {
   position: absolute; inset: 0; margin: 0; display: flex; justify-content: space-between; align-items: center; padding: 0 2vw;
   font: 600 clamp(3.5rem, 17vw, 17rem) / .8 var(--sans); letter-spacing: -.045em; text-transform: uppercase; color: var(--ink);
-  opacity: calc(1 - var(--zoom)); transform: scale(calc(1 + var(--zoom) * .12)); pointer-events: none;
+  pointer-events: none;
 }
 .device {
-  position: relative; width: var(--W); height: var(--H); border-radius: calc(var(--H) * .06);
+  position: relative; flex: none; width: var(--dw); height: var(--dh); border-radius: calc(var(--b) * 2.6);
   background: linear-gradient(145deg, #2a2723, #121110 40%, #0b0a09); border: 1.5px solid #3a362f;
   box-shadow: 0 50px 110px rgba(0, 0, 0, .75), inset 0 0 0 1px rgba(255, 255, 255, .05);
-  transform: rotate(calc(var(--turn) * -90deg)) scale(calc(1 + var(--zoom) * var(--zoom-k)));
+  transform-origin: 50% 50%; will-change: transform;
 }
-.cam { /* front camera on the long edge: it ends up on top once the iPad is in landscape */
-  position: absolute; right: calc(var(--b) / 2 - 3px); top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%;
+.cam { /* front camera on the top edge of the landscape iPad */
+  position: absolute; left: 50%; top: calc(var(--b) / 2 - 3px); width: 6px; height: 6px; margin-left: -3px; border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #2c3440, #050607 70%);
 }
-.screen { position: absolute; inset: var(--b); border-radius: calc(var(--H) * .032); overflow: hidden; background: #080706; }
-.home { /* the home screen counter-turns and reshapes from portrait to landscape, as an iPad's screen does */
-  position: absolute; left: 50%; top: 50%;
-  width: calc(var(--SW) + (var(--SH) - var(--SW)) * var(--turn)); height: calc(var(--SH) - (var(--SH) - var(--SW)) * var(--turn));
-  transform: translate(-50%, -50%) rotate(calc(var(--turn) * 90deg)) scale(calc(.92 + var(--unlock) * .08));
+.screen { position: absolute; inset: var(--b); border-radius: calc(var(--b) * 1.4); overflow: hidden; background: var(--bg); contain: paint; }
+.site { position: absolute; inset: 0 0 auto; container: site / inline-size; will-change: transform; }
+
+/* the dock: the site's own menu, floating at the foot of the screen */
+.dock {
+  position: absolute; z-index: 3; left: 50%; bottom: max(14px, calc(var(--b) * 1.1)); transform: translateX(-50%);
+  display: flex; gap: .25rem; padding: .3rem; border-radius: 99px;
+  background: rgba(20, 18, 16, .72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(255, 255, 255, .08);
+}
+.dock a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 1rem; border-radius: 99px; text-decoration: none; font-size: .85rem; color: var(--ink); transition: background-color .25s var(--ease), color .25s var(--ease); }
+.dock a:hover { background: rgba(255, 255, 255, .08); }
+.dock a[aria-current="true"] { background: var(--ink); color: #111; }
+
+/* the portrait home screen that turns with the device on wide windows */
+.home {
+  position: absolute; z-index: 4; left: 50%; top: 50%; pointer-events: none;
   display: flex; flex-direction: column; justify-content: space-between; padding: 9% 7% 5%;
   background: radial-gradient(60% 70% at 70% 35%, rgba(214, 188, 146, .22), transparent 70%), radial-gradient(40% 50% at 20% 90%, rgba(214, 188, 146, .08), transparent 70%), #080706;
 }
 .inner-body { align-self: flex-start; }
-.inner-eyebrow { margin: 0 0 1em; font: 500 calc(var(--H) * .019) var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
-.inner-title { margin: 0; font: 500 calc(var(--H) * .085) / .95 var(--sans); letter-spacing: -.035em; }
-.inner-nav { align-self: center; display: flex; gap: .3em; padding: .3em; border-radius: 99px; background: rgba(255, 255, 255, .07); font-size: calc(var(--H) * .021); }
+.inner-eyebrow { margin: 0 0 1em; font: 500 calc(var(--lw) * .028) var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.inner-title { margin: 0; font: 500 calc(var(--lw) * .12) / .95 var(--sans); letter-spacing: -.035em; }
+.inner-nav { align-self: center; display: flex; gap: .3em; padding: .3em; border-radius: 99px; background: rgba(255, 255, 255, .07); font-size: calc(var(--lw) * .03); }
 .inner-nav a { text-decoration: none; padding: .45em 1em; border-radius: 99px; color: var(--ink); }
 .inner-nav a:first-child { background: var(--ink); color: #111; }
-.lock { /* slides up and away as the iPad unlocks */
-  position: absolute; inset: 0; z-index: 2; border-radius: inherit;
-  transform: translateY(calc(var(--unlock) * -14%)); pointer-events: none; padding: 14% 8% 7%;
-  display: flex; flex-direction: column; align-items: center; text-align: center; opacity: calc(1 - var(--unlock) * 1.4);
+
+/* the lock screen: upright whichever way the device is held */
+.lock {
+  position: absolute; z-index: 5; left: 50%; top: 50%; pointer-events: none; padding: 14% 8% 7%;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
   background: radial-gradient(80% 55% at 50% 30%, rgba(214, 188, 146, .28), transparent 70%), radial-gradient(70% 60% at 50% 115%, rgba(120, 96, 66, .35), transparent 70%), #0a0908;
 }
-.lock-time { margin: 0; font: 600 calc(var(--W) * .25) / 1 var(--sans); letter-spacing: -.04em; }
-.lock-sub { margin: .5em 0 0; font-size: calc(var(--W) * .035); color: var(--muted); }
-.notes { list-style: none; margin: auto 0 0; padding: 0; width: 100%; display: grid; gap: .5em; font-size: calc(var(--W) * .032); text-align: start; }
-.notes li { display: flex; align-items: center; gap: .8em; padding: .75em .9em; border-radius: 14px; background: rgba(255, 255, 255, .07); backdrop-filter: blur(6px); }
+.lock-time { margin: 0; font: 600 calc(var(--lw) * .25) / 1 var(--sans); letter-spacing: -.04em; }
+.lock-sub { margin: .5em 0 0; font-size: calc(var(--lw) * .035); color: var(--muted); }
+.notes { list-style: none; margin: auto 0 0; padding: 0; width: 100%; display: grid; gap: .5em; font-size: calc(var(--lw) * .032); text-align: start; }
+.notes li { display: flex; align-items: center; gap: .8em; padding: .75em .9em; border-radius: 14px; background: rgba(255, 255, 255, .07); }
 .note-icon { flex: none; display: grid; place-items: center; width: 2.2em; height: 2.2em; border-radius: 9px; background: var(--gold); color: #15120d; font-weight: 600; }
 .note-text { display: grid; gap: .15em; }
 .note-text small { color: var(--muted); font-family: var(--mono); font-size: .78em; letter-spacing: .06em; text-transform: uppercase; }
-.lock-hint { margin: 1em 0 0; padding: .5em 1.1em; border-radius: 99px; background: rgba(255, 255, 255, .1); font-size: calc(var(--W) * .03); }
+.lock-hint { margin: 1em 0 0; padding: .5em 1.1em; border-radius: 99px; background: rgba(255, 255, 255, .1); font-size: calc(var(--lw) * .03); }
+
+/* the last screen: the device turns back and rings, about your next project */
+.call {
+  position: absolute; z-index: 6; left: 50%; top: 50%; padding: 16% 9% 9%; opacity: 0; pointer-events: none;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  background: radial-gradient(70% 50% at 50% 40%, rgba(214, 188, 146, .2), transparent 70%), #0a0908;
+}
+.call.live { pointer-events: auto; }
+.call-name { margin: 0; font: 600 calc(var(--lw) * .1) / 1 var(--sans); letter-spacing: -.03em; }
+.call-sub { margin: .7em 0 0; font-size: calc(var(--lw) * .036); color: var(--muted); }
+.call-avatar {
+  display: grid; place-items: center; width: calc(var(--lw) * .34); aspect-ratio: 1; margin: auto 0; border-radius: 50%;
+  background: var(--btn); color: #15120d; font: 400 calc(var(--lw) * .13) / 1 var(--serif);
+  box-shadow: 0 0 0 calc(var(--lw) * .03) rgba(228, 210, 178, .12), 0 0 0 calc(var(--lw) * .07) rgba(228, 210, 178, .06);
+  animation: ring 2.4s var(--ease) infinite;
+}
+@keyframes ring { 0%, 100% { box-shadow: 0 0 0 calc(var(--lw) * .03) rgba(228, 210, 178, .12), 0 0 0 calc(var(--lw) * .07) rgba(228, 210, 178, .06); } 50% { box-shadow: 0 0 0 calc(var(--lw) * .05) rgba(228, 210, 178, .16), 0 0 0 calc(var(--lw) * .11) rgba(228, 210, 178, .04); } }
+.call-btn {
+  display: flex; align-items: center; gap: .8em; width: 100%; min-height: 44px; padding: .4em .5em; border-radius: 99px; text-decoration: none;
+  background: rgba(255, 255, 255, .09); font-size: calc(var(--lw) * .04); font-weight: 500; transition: background-color .25s var(--ease);
+}
+.call-btn:hover { background: rgba(255, 255, 255, .15); }
+.call-knob { display: grid; place-items: center; width: 2.4em; height: 2.4em; border-radius: 50%; background: #3f9b5c; color: #fff; }
+.call-mail { margin: 1.1em 0 0; font: 500 calc(var(--lw) * .028) var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 
 /* ---------- sections ---------- */
-main section, .contact { padding: clamp(5rem, 12vw, 9rem) 0; border-top: 1px solid var(--line); }
-.hero { border-top: 0; padding-top: clamp(4rem, 10vw, 7rem); }
+main section, .contact { padding: clamp(4rem, 10cqi, 8rem) 0; border-top: 1px solid var(--line); }
+.contact { padding-bottom: clamp(7rem, 14cqi, 10rem); } /* clear of the dock */
+.hero { border-top: 0; min-height: var(--sh, 100%); display: flex; align-items: center; padding: clamp(3rem, 8cqi, 6rem) 0 clamp(5rem, 9cqi, 7rem); } /* the first screenful */
+.hero .container { width: min(1200px, 100% - clamp(2.5rem, 10cqi, 8rem)); }
 .eyebrow, .kicker { margin: 0 0 1.4rem; font: 500 .72rem var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: .75rem; }
 .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
 .rule { width: 2.5rem; height: 1px; background: var(--line); }
 h1, h2 { margin: 0; font-weight: 500; letter-spacing: -.035em; line-height: .98; text-wrap: balance; }
-h1 { font-size: clamp(3.2rem, 9vw, 7.5rem); }
-h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
-.lede, .section-lede { max-width: 46ch; margin: 1.6rem 0 0; font-size: clamp(1.05rem, 1.6vw, 1.25rem); line-height: 1.55; color: #c8c1b6; }
+h1 { font-size: clamp(2.8rem, 9cqi, 7rem); }
+h2 { font-size: clamp(2.2rem, 6cqi, 4.6rem); }
+.lede, .section-lede { max-width: 46ch; margin: 1.6rem 0 0; font-size: clamp(1.02rem, 1.6cqi, 1.22rem); line-height: 1.55; color: #c8c1b6; }
 .ctas { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 2.2rem; }
 .btn {
   display: inline-flex; align-items: center; gap: .6rem; padding: .95rem 1.4rem; border-radius: 4px; text-decoration: none;
@@ -106,16 +144,16 @@ h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
 .btn.ghost:hover { border-color: var(--gold); color: var(--gold); }
 .meta { list-style: none; display: flex; flex-wrap: wrap; gap: .6rem 2rem; margin: 3.2rem 0 0; padding: 1.4rem 0 0; border-top: 1px solid var(--line); font: 500 .72rem var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
 
-.split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 6cqi, 6rem); align-items: start; }
 .about-body p { margin: 0 0 1.2rem; font-size: 1.1rem; line-height: 1.65; color: #c8c1b6; max-width: 52ch; }
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2.4rem 0 0; padding-top: 1.6rem; border-top: 1px solid var(--line); }
-.stats dt { font: 400 clamp(2.4rem, 5vw, 3.6rem) / 1 var(--serif); color: var(--gold); }
+.stats dt { font: 400 clamp(2.4rem, 5cqi, 3.6rem) / 1 var(--serif); color: var(--gold); }
 .stats dd { margin: .5rem 0 0; font: 500 .7rem var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
 
 .cards, .steps { list-style: none; margin: 3.4rem 0 0; padding: 0; display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
 .cards { grid-template-columns: repeat(2, 1fr); }
 .steps { grid-template-columns: repeat(4, 1fr); }
-.cards li, .steps li { background: var(--bg); padding: clamp(1.6rem, 3vw, 2.6rem); transition: background-color .35s var(--ease); }
+.cards li, .steps li { background: var(--bg); padding: clamp(1.6rem, 3cqi, 2.6rem); transition: background-color .35s var(--ease); }
 .cards li:hover { background: #0b0a09; }
 .num { display: block; font: 500 .72rem var(--mono); letter-spacing: .16em; color: var(--gold); margin-bottom: 2.4rem; }
 .cards h3, .steps h3 { margin: 0 0 .7rem; font-size: 1.35rem; font-weight: 500; letter-spacing: -.02em; }
@@ -133,7 +171,7 @@ h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
 
 /* ---------- the 3D phones (three.js canvas) ---------- */
 .work .stage { display: grid; place-items: center; margin-top: 3rem; padding: 0 1rem; }
-.wall { position: relative; width: min(940px, 96vw); aspect-ratio: 1.55; } /* fits the three phones side by side without dead bands above and below */
+.wall { position: relative; width: min(940px, 100%); aspect-ratio: 1.55; } /* fits the three phones side by side without dead bands above and below */
 .wall { direction: ltr; } /* the 3D layers position their iframes from the left; keep that on the Arabic page too */
 .wall canvas { display: block; }
 .wall.no-3d { display: grid; place-items: center; color: var(--muted); aspect-ratio: auto; padding: 3rem 1rem; }
@@ -185,8 +223,9 @@ h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
 }
 .actions button:hover { border-color: var(--gold); }
 @media (pointer: coarse) { .actions button, .actions a { display: inline-flex; align-items: center; min-height: 44px; } } /* touch: full-size buttons */
+.actions a[hidden] { display: none; } /* Tessera has no "open in a new tab" link */
 .frame-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr); position: relative; }
-.frame.study-open .frame-body { grid-template-columns: minmax(0, 1fr) min(24rem, 34vw); }
+.frame.study-open .frame-body { grid-template-columns: minmax(0, 1fr) min(24rem, 38%); }
 .viewport { background: var(--panel); min-height: 0; position: relative; }
 .study {
   display: none; overflow-y: auto; padding: 1.4rem 1.5rem 2rem; background: var(--bg);
@@ -205,24 +244,27 @@ h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
 .viewport iframe { position: relative; width: 100%; height: 100%; border: 0; display: block; transition: opacity .35s ease-out; }
 .viewport.loading iframe { opacity: 0; }
 
-/* ---------- smaller screens ---------- */
-@media (max-width: 1000px) { .open-row .label-kind { display: none; } } /* label slots under the phones are too narrow for the details; the case study has them */
-@media (max-width: 900px) {
+/* ---------- smaller screens: the content answers to the iPad's screen, the chrome to the window ---------- */
+@container site (max-width: 1000px) { .open-row .label-kind { display: none; } } /* label slots under the phones are too narrow for the details; the case study has them */
+@container site (max-width: 900px) {
   .split { grid-template-columns: 1fr; }
   .steps { grid-template-columns: repeat(2, 1fr); }
 }
-@media (max-width: 700px) {
-  .topnav a:not(.lang):not(.alt) { display: none; } /* phones keep the retro TV and the language switch */
+@container site (max-width: 700px) {
   .cards, .steps { grid-template-columns: 1fr; }
   .stats { grid-template-columns: repeat(3, 1fr); gap: .6rem; }
   .work .stage { padding: 0; }
-  .wall { width: 100vw; aspect-ratio: 1.3; } /* the phones stay in a row, closer together so each is bigger */
+  .wall { width: 100%; aspect-ratio: 1.3; } /* the phones stay in a row, closer together so each is bigger */
   .hero .eyebrow .rule { display: inline-block; width: 1rem; vertical-align: middle; margin: 0 .5rem; } /* a short rule, so the line wraps cleanly */
   .hero .eyebrow { display: block; line-height: 1.8; }
   .hero .eyebrow .dot { display: inline-block; vertical-align: middle; margin-inline-end: .6rem; }
   .open-row.aligned button { margin: 0 .2rem; padding-inline: .3rem; }
   .open-row .label-name { font-size: .78rem; text-wrap: balance; }
   .open-row .label-kind { display: none; }
+}
+@container site (max-width: 480px) { .dock a { padding: 0 .7rem; font-size: .8rem; } }
+@media (max-width: 700px) {
+  .topnav a:not(.lang):not(.alt) { display: none; } /* phones keep the retro TV and the language switch */
   .frame { border-width: 8px; border-radius: 18px; }
   .bar { padding: .7rem .85rem; }
   .bar p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -232,11 +274,10 @@ h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
   .frame.study-open .study { position: absolute; inset: 0; border-inline-start: 0; }
 }
 
-/* ---------- reduced motion: the iPad simply sits unlocked in landscape, nothing moves ---------- */
+/* ---------- reduced motion: the iPad simply sits open; the site still scrolls on its screen ---------- */
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
   * { transition: none !important; }
-  .unfold { height: 100vh; }
+  .call-avatar { animation: none; }
   .js .reveal { opacity: 1; transform: none; }
 }
 
@@ -244,7 +285,7 @@ h2 { font-size: clamp(2.4rem, 6vw, 4.8rem); }
 :lang(ar) body, body:lang(ar) { font-family: "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif; }
 :lang(ar) em { font-family: "Amiri", "IBM Plex Sans Arabic", serif; font-style: normal; }
 /* letter-spacing breaks the joins between Arabic letters */
-:lang(ar) :is(.brand, .giant, h1, h2, h3, .inner-title, .lock-time, .eyebrow, .kicker, .meta, .stats dd, .num, .contact-links, .label-kind, .note-text small, .inner-eyebrow, .study h3, .btn) { letter-spacing: 0; }
+:lang(ar) :is(.brand, .giant, h1, h2, h3, .inner-title, .lock-time, .call-name, .call-mail, .eyebrow, .kicker, .meta, .stats dd, .num, .contact-links, .label-kind, .note-text small, .inner-eyebrow, .study h3, .btn) { letter-spacing: 0; }
 :lang(ar) .viewport::before { letter-spacing: 0; }
 :lang(ar) h1, :lang(ar) h2, :lang(ar) .inner-title { line-height: 1.25; }
 :lang(ar) .lede, :lang(ar) .section-lede, :lang(ar) .about-body p, :lang(ar) .cards p, :lang(ar) .steps p, :lang(ar) .study { line-height: 1.85; }

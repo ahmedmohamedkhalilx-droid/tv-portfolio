@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="style.css?v=20261020a">
+  <link rel="stylesheet" href="style.css?v=20261021a">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -35,21 +35,119 @@
     </nav>
   </header>
 
-  <!-- intro: an iPad that unlocks and turns to landscape as you scroll -->
-  <section class="unfold" id="top" aria-label="Intro">
-    <div class="unfold-stage">
+  <!-- the whole site plays on an iPad: it unlocks, turns to landscape, the site scrolls on its screen,
+       and at the end it turns back to a call screen -->
+  <div class="runway" id="top">
+    <div class="stage">
       <p class="giant" aria-hidden="true"><span>Ahmed</span><span>Khalil</span></p>
-      <div class="device" aria-hidden="true">
-        <span class="cam"></span>
-        <div class="screen">
-          <div class="home">
+      <div class="device" role="region" aria-label="The site, shown on an iPad">
+        <span class="cam" aria-hidden="true"></span>
+        <div class="screen" id="screen">
+          <div class="site" id="site">
+            <main>
+              <section class="hero" id="intro">
+                <div class="container">
+                  <p class="eyebrow reveal"><span class="dot"></span>Cairo, Egypt <span class="rule"></span> Independent web developer</p>
+                  <h1 class="reveal">Digital craft,<br><em>made distinct.</em></h1>
+                  <p class="lede reveal">I build thoughtful websites and online stores for ambitious brands — in English, Arabic, and everything in between.</p>
+                  <div class="ctas reveal">
+                    <a class="btn primary" href="#work">Explore the work <span aria-hidden="true">↘</span></a>
+                    <a class="btn ghost" href="#contact">Let’s talk <span aria-hidden="true">↗</span></a>
+                  </div>
+                  <ul class="meta reveal">
+                    <li>Independent by design</li>
+                    <li>Built for the details</li>
+                    <li>EN · AR · RTL</li>
+                  </ul>
+                </div>
+              </section>
+
+              <section class="about" id="about">
+                <div class="container split">
+                  <div>
+                    <p class="kicker reveal">01 / The point of view</p>
+                    <h2 class="reveal">Good work is felt<br><em>before it’s explained.</em></h2>
+                  </div>
+                  <div class="about-body">
+                    <p class="reveal">I’m Ahmed, a web developer based in Cairo. I bring strategy, design and engineering together to make digital experiences that feel clear, considered and unmistakably yours.</p>
+                    <p class="reveal">From a firm’s first proper website to an online store that works beautifully in two languages, I care about what happens after the first impression.</p>
+                    <dl class="stats reveal">
+                      <div><dt>03</dt><dd>Selected projects</dd></div>
+                      <div><dt>02</dt><dd>Languages, fully built</dd></div>
+                      <div><dt>03</dt><dd>Platforms in the work</dd></div>
+                    </dl>
+                  </div>
+                </div>
+              </section>
+
+              <section class="work" id="work">
+                <div class="container">
+                  <p class="kicker reveal">02 / Selected work</p>
+                  <h2 class="reveal">Made with <em>intention.</em></h2>
+                  <p class="section-lede reveal">A small selection of projects built around real people, real needs and a better experience.</p>
+                </div>
+                <div class="stage">
+                  <div class="wall" id="wall" aria-label="Three phones, each showing a project: HELCO, Tessera and The Dental Hauz. Press a phone, or its label below, to open the project."></div>
+                </div>
+                <nav class="open-row" aria-label="Projects">
+                  <button data-open="helco" type="button"><span class="label-name">HELCO</span><span class="label-kind">Corporate · Next.js · EN / AR</span></button>
+                  <button data-open="tessera" type="button"><span class="label-name">Tessera</span><span class="label-kind">Commerce · Shopify · EN / AR</span></button>
+                  <button data-open="dental" type="button"><span class="label-name">The Dental Hauz</span><span class="label-kind">Healthcare · WordPress</span></button>
+                </nav>
+                <p class="hint"><span class="hint-hover">Hover a phone to bring it forward, press it to open the project.</span><span class="hint-touch">Tap a phone to open the project.</span></p>
+              </section>
+
+              <section class="expertise" id="expertise">
+                <div class="container">
+                  <p class="kicker reveal">03 / Expertise</p>
+                  <h2 class="reveal">Thoughtful, from<br><em>first pixel to launch.</em></h2>
+                  <p class="section-lede reveal">The right mix of creative precision and solid engineering, shaped around your business.</p>
+                  <ol class="cards">
+                    <li class="reveal"><span class="num">01</span><h3>Websites with purpose</h3><p>Fast, responsive websites with a distinct point of view — built to tell your story and make the next step feel natural.</p></li>
+                    <li class="reveal"><span class="num">02</span><h3>Online stores that sell</h3><p>Commerce experiences that make discovery, product choice and checkout feel effortless across every screen.</p></li>
+                    <li class="reveal"><span class="num">03</span><h3>English + Arabic, done right</h3><p>Not just translated. Fully considered bilingual experiences with genuine RTL foundations, readable type and intuitive switching.</p></li>
+                    <li class="reveal"><span class="num">04</span><h3>Design-minded development</h3><p>Polished interfaces, careful interaction details and accessible, maintainable code — without losing sight of the whole.</p></li>
+                  </ol>
+                </div>
+              </section>
+
+              <section class="approach" id="approach">
+                <div class="container">
+                  <p class="kicker reveal">04 / The approach</p>
+                  <h2 class="reveal">A clear path.<br><em>Better outcomes.</em></h2>
+                  <p class="section-lede reveal">Good collaboration is thoughtful, transparent and built on small decisions made well.</p>
+                  <ol class="steps">
+                    <li class="reveal"><span class="num">01</span><h3>Discover</h3><p>We get clear on the people, goals and opportunities behind the brief.</p></li>
+                    <li class="reveal"><span class="num">02</span><h3>Shape</h3><p>Structure, visual direction and the details that make it feel like you.</p></li>
+                    <li class="reveal"><span class="num">03</span><h3>Build</h3><p>Careful development, real-device refinement and thoughtful iteration.</p></li>
+                    <li class="reveal"><span class="num">04</span><h3>Launch</h3><p>A confident handoff, with a clear path for what comes next.</p></li>
+                  </ol>
+                </div>
+              </section>
+            </main>
+
+            <footer class="contact" id="contact">
+              <div class="container">
+                <p class="kicker reveal">Cairo · Working everywhere</p>
+                <h2 class="reveal">Have something<br><em>good in mind?</em></h2>
+                <p class="section-lede reveal">Tell me what you’re working on. I’ll get back to you with a thoughtful first step.</p>
+                <a class="btn primary reveal" href="mailto:ahmedmohamedkhalilx@gmail.com?subject=New%20project">Start a conversation <span aria-hidden="true">↗</span></a>
+                <p class="contact-links">
+                  <a href="mailto:ahmedmohamedkhalilx@gmail.com">ahmedmohamedkhalilx@gmail.com <span aria-hidden="true">↗</span></a>
+                  <a href="https://github.com/ahmedmohamedkhalilx-droid" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
+                </p>
+              </div>
+            </footer>
+          </div>
+          <nav class="dock" aria-label="Sections"><a href="#intro">Home</a><a href="#work">Work</a><a href="#about">About</a><a href="#contact">Contact</a></nav>
+          <div class="home" aria-hidden="true">
             <div class="inner-body">
             <p class="inner-eyebrow">Cairo, Egypt · Independent web developer</p>
             <p class="inner-title">Digital craft,<br><em>made distinct.</em></p>
             </div>
             <div class="inner-nav"><a href="#intro" tabindex="-1">Home</a><a href="#work" tabindex="-1">Work</a><a href="#about" tabindex="-1">About</a><a href="#contact" tabindex="-1">Contact</a></div>
           </div>
-          <div class="lock">
+          <div class="lock" aria-hidden="true">
           <p class="lock-time" data-clock>14:32</p>
           <p class="lock-sub">Web developer · Cairo</p>
           <ul class="notes">
@@ -58,105 +156,17 @@
           </ul>
           <p class="lock-hint">Scroll to unlock</p>
           </div>
+          <div class="call" aria-hidden="true">
+            <p class="call-name">Ahmed Khalil</p>
+            <p class="call-sub">Incoming call · about your next project</p>
+            <span class="call-avatar">AK</span>
+            <a class="call-btn" href="mailto:ahmedmohamedkhalilx@gmail.com?subject=New%20project" tabindex="-1"><span class="call-knob">↗</span>Start a conversation</a>
+            <p class="call-mail">ahmedmohamedkhalilx@gmail.com</p>
+          </div>
         </div>
       </div>
     </div>
-  </section>
-
-  <main>
-    <section class="hero" id="intro">
-      <div class="container">
-        <p class="eyebrow reveal"><span class="dot"></span>Cairo, Egypt <span class="rule"></span> Independent web developer</p>
-        <h1 class="reveal">Digital craft,<br><em>made distinct.</em></h1>
-        <p class="lede reveal">I build thoughtful websites and online stores for ambitious brands — in English, Arabic, and everything in between.</p>
-        <div class="ctas reveal">
-          <a class="btn primary" href="#work">Explore the work <span aria-hidden="true">↘</span></a>
-          <a class="btn ghost" href="#contact">Let’s talk <span aria-hidden="true">↗</span></a>
-        </div>
-        <ul class="meta reveal">
-          <li>Independent by design</li>
-          <li>Built for the details</li>
-          <li>EN · AR · RTL</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="about" id="about">
-      <div class="container split">
-        <div>
-          <p class="kicker reveal">01 / The point of view</p>
-          <h2 class="reveal">Good work is felt<br><em>before it’s explained.</em></h2>
-        </div>
-        <div class="about-body">
-          <p class="reveal">I’m Ahmed, a web developer based in Cairo. I bring strategy, design and engineering together to make digital experiences that feel clear, considered and unmistakably yours.</p>
-          <p class="reveal">From a firm’s first proper website to an online store that works beautifully in two languages, I care about what happens after the first impression.</p>
-          <dl class="stats reveal">
-            <div><dt>03</dt><dd>Selected projects</dd></div>
-            <div><dt>02</dt><dd>Languages, fully built</dd></div>
-            <div><dt>03</dt><dd>Platforms in the work</dd></div>
-          </dl>
-        </div>
-      </div>
-    </section>
-
-    <section class="work" id="work">
-      <div class="container">
-        <p class="kicker reveal">02 / Selected work</p>
-        <h2 class="reveal">Made with <em>intention.</em></h2>
-        <p class="section-lede reveal">A small selection of projects built around real people, real needs and a better experience.</p>
-      </div>
-      <div class="stage">
-        <div class="wall" id="wall" aria-label="Three phones, each showing a project: HELCO, Tessera and The Dental Hauz. Press a phone, or its label below, to open the project."></div>
-      </div>
-      <nav class="open-row" aria-label="Projects">
-        <button data-open="helco" type="button"><span class="label-name">HELCO</span><span class="label-kind">Corporate · Next.js · EN / AR</span></button>
-        <button data-open="tessera" type="button"><span class="label-name">Tessera</span><span class="label-kind">Commerce · Shopify · EN / AR</span></button>
-        <button data-open="dental" type="button"><span class="label-name">The Dental Hauz</span><span class="label-kind">Healthcare · WordPress</span></button>
-      </nav>
-      <p class="hint"><span class="hint-hover">Hover a phone to bring it forward, press it to open the project.</span><span class="hint-touch">Tap a phone to open the project.</span></p>
-    </section>
-
-    <section class="expertise" id="expertise">
-      <div class="container">
-        <p class="kicker reveal">03 / Expertise</p>
-        <h2 class="reveal">Thoughtful, from<br><em>first pixel to launch.</em></h2>
-        <p class="section-lede reveal">The right mix of creative precision and solid engineering, shaped around your business.</p>
-        <ol class="cards">
-          <li class="reveal"><span class="num">01</span><h3>Websites with purpose</h3><p>Fast, responsive websites with a distinct point of view — built to tell your story and make the next step feel natural.</p></li>
-          <li class="reveal"><span class="num">02</span><h3>Online stores that sell</h3><p>Commerce experiences that make discovery, product choice and checkout feel effortless across every screen.</p></li>
-          <li class="reveal"><span class="num">03</span><h3>English + Arabic, done right</h3><p>Not just translated. Fully considered bilingual experiences with genuine RTL foundations, readable type and intuitive switching.</p></li>
-          <li class="reveal"><span class="num">04</span><h3>Design-minded development</h3><p>Polished interfaces, careful interaction details and accessible, maintainable code — without losing sight of the whole.</p></li>
-        </ol>
-      </div>
-    </section>
-
-    <section class="approach" id="approach">
-      <div class="container">
-        <p class="kicker reveal">04 / The approach</p>
-        <h2 class="reveal">A clear path.<br><em>Better outcomes.</em></h2>
-        <p class="section-lede reveal">Good collaboration is thoughtful, transparent and built on small decisions made well.</p>
-        <ol class="steps">
-          <li class="reveal"><span class="num">01</span><h3>Discover</h3><p>We get clear on the people, goals and opportunities behind the brief.</p></li>
-          <li class="reveal"><span class="num">02</span><h3>Shape</h3><p>Structure, visual direction and the details that make it feel like you.</p></li>
-          <li class="reveal"><span class="num">03</span><h3>Build</h3><p>Careful development, real-device refinement and thoughtful iteration.</p></li>
-          <li class="reveal"><span class="num">04</span><h3>Launch</h3><p>A confident handoff, with a clear path for what comes next.</p></li>
-        </ol>
-      </div>
-    </section>
-  </main>
-
-  <footer class="contact" id="contact">
-    <div class="container">
-      <p class="kicker reveal">Cairo · Working everywhere</p>
-      <h2 class="reveal">Have something<br><em>good in mind?</em></h2>
-      <p class="section-lede reveal">Tell me what you’re working on. I’ll get back to you with a thoughtful first step.</p>
-      <a class="btn primary reveal" href="mailto:ahmedmohamedkhalilx@gmail.com?subject=New%20project">Start a conversation <span aria-hidden="true">↗</span></a>
-      <p class="contact-links">
-        <a href="mailto:ahmedmohamedkhalilx@gmail.com">ahmedmohamedkhalilx@gmail.com <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/ahmedmohamedkhalilx-droid" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
-      </p>
-    </div>
-  </footer>
+  </div>
 
   <div class="project" id="project" hidden>
     <div class="frame" id="frame" role="dialog" aria-modal="true" aria-labelledby="p-title">
@@ -186,6 +196,6 @@
     }
   }
   </script>
-  <script type="module" src="script.js?v=20261020a"></script>
+  <script type="module" src="script.js?v=20261021a"></script>
 </body>
 </html>
