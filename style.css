@@ -36,7 +36,7 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
    script.js sizes the device (--dw × --dh, landscape on wide windows, portrait on tall ones) and drives
    the turn, the unlock and the scroll of the site inside the screen from the page scroll. */
 .runway { position: relative; height: 100vh; } /* the real height is set by script.js */
-.stage {
+.runway > .stage { /* the sticky frame the iPad sits in (not the phones .stage inside the site) */
   position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; place-items: center;
   --dw: min(92vw, 1200px); --dh: min(80vh, 750px); --b: 14px; --lw: 360px;
 }
