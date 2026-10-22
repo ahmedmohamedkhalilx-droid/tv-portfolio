@@ -168,23 +168,27 @@ function setStudyOpen(open) {
   studyToggle.textContent = open ? UI.hideStudy : UI.study;
 }
 
-// ---------- the whole site plays on an iPad ----------
-// The page scroll is a timeline. First the iPad unlocks and, on a wide window, turns from portrait to
-// landscape while it grows to fill the window. Then the site scrolls on its screen. At the end the iPad
-// turns back to portrait and rings: the contact screen. On a tall window (phones) it stays portrait.
+// ---------- the whole site plays on an old TV ----------
+// The page scroll is a timeline. The set starts off; scrolling switches it on (a bright line opens into a
+// test card) while it grows to fill the window. Then the site scrolls on its screen. At the end the set
+// shrinks back and signs off with the contact details.
 const runway = document.querySelector('.runway');
 const stage = runway.querySelector('.stage');
 const device = stage.querySelector('.device');
 const screenEl = document.getElementById('screen');
 const site = document.getElementById('site');
 const giant = stage.querySelector('.giant');
-const lockEl = stage.querySelector('.lock');
-const homeEl = stage.querySelector('.home');
-const callEl = stage.querySelector('.call');
-const callLinks = [...callEl.querySelectorAll('a')];
+const offEl = stage.querySelector('.off');
+const powerEl = stage.querySelector('.power');
+const identEl = stage.querySelector('.ident');
+const signoffEl = stage.querySelector('.signoff');
+const signoffLinks = [...signoffEl.querySelectorAll('a')];
+const antenna = stage.querySelector('.antenna');
 const dock = stage.querySelector('.dock');
 const dockLinks = [...dock.querySelectorAll('a')];
+const dial = document.getElementById('dial');
 const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const easeOut = (t) => 1 - Math.pow(1 - t, 3);
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
 const lerp = (a, b, t) => a + (b - a) * t;
 
@@ -193,77 +197,63 @@ function measure() {
   const vw = document.documentElement.clientWidth, vh = window.innerHeight;
   const wide = vw >= vh * 1.05;
   let dw, dh;
-  if (wide) { // landscape, leaving room for the top bar
+  if (wide) { // a landscape set, leaving room for the top bar and the aerial
     dw = Math.min(vw * 0.92, 1400);
-    dh = Math.min(vh - 140, dw / 1.3);
-    dw = Math.min(dw, dh * 1.62);
-  } else { // portrait
-    dw = Math.min(vw - 20, 900);
-    dh = Math.min(vh - 120, dw * 2.2);
+    dh = Math.min(vh - 150, dw / 1.42);
+    dw = Math.min(dw, dh * 1.75);
+  } else { // a tall portable set
+    dw = Math.min(vw - 16, 900);
+    dh = Math.min(vh - 110, dw * 2.2);
   }
-  const b = Math.round(Math.max(8, Math.min(18, Math.min(dw, dh) * 0.022)));
-  const sw = dw - 2 * b, sh = dh - 2 * b;
-  // the portrait size at the start and the end, as a fraction of the full size
-  const s0 = wide ? Math.min((vh * 0.66) / dw, (vw * 0.7) / dh) : Math.min((vh * 0.66) / dh, (vw * 0.72) / dw);
-  const lw = wide ? sh : sw, lh = wide ? sw : sh; // the portrait screens' own size (upright)
+  const pad = Math.round(Math.max(10, Math.min(24, Math.min(dw, dh) * 0.022)));
   stage.classList.toggle('tall', !wide);
-  for (const [k, v] of Object.entries({ '--dw': dw, '--dh': dh, '--b': b, '--sw': sw, '--sh': sh, '--lw': lw })) stage.style.setProperty(k, v + 'px');
-  for (const el of [lockEl, callEl]) Object.assign(el.style, { width: lw + 'px', height: lh + 'px', marginLeft: -lw / 2 + 'px', marginTop: -lh / 2 + 'px' });
-  const intro = reduceMotion ? 0 : vh * (wide ? 1.5 : 1.1); // unlock, then turn and grow
+  for (const [k, v] of Object.entries({ '--dw': dw, '--dh': dh, '--pad': pad, '--panel-w': Math.round(Math.min(210, Math.max(150, dw * 0.15))) })) stage.style.setProperty(k, v + 'px');
+  const sh = screenEl.clientHeight;
+  stage.style.setProperty('--sh', sh + 'px');
+  const s0 = Math.min((vh * 0.6) / dh, (vw * 0.62) / dw); // the set's size while it is off, and when it signs off
+  const intro = reduceMotion ? 0 : vh * 1.3;
   const travel = Math.max(0, site.offsetHeight - sh);
-  const outro = reduceMotion ? 0 : vh * 1.1;
-  G = { vw, vh, wide, dw, dh, sw, sh, s0, intro, travel, outro };
+  const outro = reduceMotion ? 0 : vh * 1.0;
+  G = { vw, vh, wide, sh, s0, intro, travel, outro };
   runway.style.height = intro + travel + outro + vh * 1.15 + 'px';
 }
 
-let turnedFully = false;
+let openFully = false;
 function update() {
   if (!G) return;
   const y = window.scrollY;
-  const { wide, sw, sh, s0, intro, travel, outro } = G;
-  // phases
-  const u = reduceMotion ? 1 : easeInOut(clamp01(y / (intro * 0.35)));                   // unlock
-  const t = reduceMotion ? 1 : easeInOut(clamp01((y - intro * 0.35) / (intro * 0.65)));  // turn and grow
-  const o = reduceMotion ? 0 : easeInOut(clamp01((y - intro - travel) / outro));         // turn back and ring
+  const { s0, intro, travel, outro } = G;
+  const on = reduceMotion ? 1 : clamp01(y / (intro * 0.3));                                 // switching on
+  const grow = reduceMotion ? 1 : easeInOut(clamp01((y - intro * 0.3) / (intro * 0.7)));    // growing to fill the window
+  const o = reduceMotion ? 0 : easeInOut(clamp01((y - intro - travel) / outro));            // signing off
   const scroll = Math.min(travel, Math.max(0, y - intro));
 
-  // the device: portrait and smaller at both ends, full size and (on wide windows) landscape in the middle
-  const open = t * (1 - o);
-  const s = lerp(s0, 1, open);
-  const rot = wide ? -90 * (1 - open) : 0;
-  device.style.transform = `rotate(${rot}deg) scale(${s})`;
+  const open = grow * (1 - o);
+  device.style.transform = `scale(${lerp(s0, 1, open)})`;
   giant.style.opacity = (1 - open).toFixed(3);
 
-  // the lock screen leaves as it unlocks
-  lockEl.style.opacity = clamp01(1 - u * 1.4).toFixed(3);
-  lockEl.style.transform = `translateY(${-u * 14}%) rotate(${wide ? 90 : 0}deg)`;
-  lockEl.style.visibility = u >= 1 ? 'hidden' : '';
+  // off → a bright line opens into the picture → a test card, which gives way to the site as the set grows
+  offEl.style.opacity = clamp01(1 - on / 0.35).toFixed(3);
+  const line = clamp01((on - 0.25) / 0.75);
+  powerEl.style.opacity = (on > 0.2 && on < 1 ? 1 - easeOut(line) : 0).toFixed(3);
+  powerEl.style.transform = `scale(${lerp(0.6, 1, clamp01(line * 3))}, ${lerp(0.004, 1, easeOut(clamp01((line - 0.3) / 0.7)))})`;
+  identEl.style.opacity = (on < 0.3 ? 0 : clamp01(1 - (grow - 0.55) / 0.35)).toFixed(3);
 
-  // on wide windows a portrait home screen turns with the device, then gives way to the site itself
-  if (wide && !reduceMotion) {
-    const w = lerp(sh, sw, t), h = lerp(sw, sh, t);
-    Object.assign(homeEl.style, { width: w + 'px', height: h + 'px', marginLeft: -w / 2 + 'px', marginTop: -h / 2 + 'px',
-      transform: `rotate(${90 * (1 - t)}deg) scale(${0.94 + 0.06 * u})`, opacity: clamp01((1 - t) / 0.18).toFixed(3), visibility: t >= 1 ? 'hidden' : '' });
-  } else homeEl.style.visibility = 'hidden';
-
-  // the site scrolls on the screen
   site.style.transform = `translate3d(0, ${-scroll}px, 0)`;
-  // while the device turns, the sideways site stays hidden behind the turning screens
-  const shown = wide ? clamp01((t - 0.8) / 0.2) * clamp01(1 - o / 0.3) : 1;
-  site.style.opacity = dock.style.opacity = shown.toFixed(3);
+  site.style.opacity = dock.style.opacity = clamp01(1 - o / 0.35).toFixed(3); // the programme ends before the sign-off card
+  antenna.style.opacity = (1 - open).toFixed(3); // the aerial would run into the top bar once the set fills the window
 
-  // the call screen comes in as the device turns back
-  callEl.style.opacity = clamp01((o - 0.25) / 0.45).toFixed(3);
-  callEl.style.transform = `rotate(${wide ? 90 * o : 0}deg)`;
+  // the sign-off card comes in as the set shrinks back
+  signoffEl.style.opacity = clamp01((o - 0.2) / 0.5).toFixed(3);
   const live = o > 0.7;
-  callEl.classList.toggle('live', live);
-  callEl.setAttribute('aria-hidden', String(!live));
-  callLinks.forEach((a) => { a.tabIndex = live ? 0 : -1; });
+  signoffEl.classList.toggle('live', live);
+  signoffEl.setAttribute('aria-hidden', String(!live));
+  signoffLinks.forEach((a) => { a.tabIndex = live ? 0 : -1; });
 
-  // once the iPad is fully open the labels under the phones can be measured
-  const full = t >= 1 && o === 0;
-  if (full && !turnedFully) alignLabels();
-  turnedFully = full;
+  // once the set is fully open the labels under the phones can be measured
+  const full = grow >= 1 && o === 0;
+  if (full && !openFully) alignLabels();
+  openFully = full;
   markDock(scroll);
 }
 
@@ -275,6 +265,15 @@ function offsetIn(el) { // an element's top within the site, in the site's own p
   for (let n = el; n && n !== site; n = n.offsetParent) y += n.offsetTop;
   return y;
 }
+let dialTurns = 0;
+dial.addEventListener('click', () => {
+  dialTurns += 1;
+  dial.style.setProperty('--turn', dialTurns * 60 + 'deg');
+  const scroll = Math.min(G.travel, Math.max(0, window.scrollY - G.intro));
+  const tops = [...site.querySelectorAll('main > section, footer')].map(offsetIn).filter((t) => t <= G.travel + 2);
+  const next = tops.find((t) => t > scroll + 8);
+  scrollToY(next === undefined ? 0 : G.intro + next + 2); // past the last section the dial comes round to the start
+});
 function markDock(scroll) {
   const probe = scroll + G.sh * 0.4;
   let on = order[0];
@@ -318,11 +317,6 @@ window.addEventListener('resize', relayout);
 new ResizeObserver(() => { const before = G && G.travel; measure(); if (G.travel !== before) update(); }).observe(site);
 relayout();
 
-// the lock screen shows the time in Cairo
-const clockFmt = new Intl.DateTimeFormat(LANG === 'ar' ? 'ar-EG' : 'en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Africa/Cairo' });
-function tickClock() { document.querySelectorAll('[data-clock]').forEach((el) => { el.textContent = clockFmt.format(new Date()); }); }
-tickClock();
-setInterval(tickClock, 30000);
 
 // ---------- sections drift up into place as they enter the screen ----------
 const revealer = 'IntersectionObserver' in window && !reduceMotion

@@ -19,8 +19,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="style.css?v=20261022a">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Righteous&family=Rubik:wght@400;500;600&family=VT323&display=swap">
+  <link rel="stylesheet" href="style.css?v=20261022b">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -35,13 +35,13 @@
     </nav>
   </header>
 
-  <!-- the whole site plays on an iPad: it unlocks, turns to landscape, the site scrolls on its screen,
-       and at the end it turns back to a call screen -->
+  <!-- the whole site plays on an old TV: it switches on, the site scrolls on its screen, and at the end it signs off -->
   <div class="runway" id="top">
     <div class="stage">
       <p class="giant" aria-hidden="true"><span>Ahmed</span><span>Khalil</span></p>
-      <div class="device" role="region" aria-label="The site, shown on an iPad">
-        <span class="cam" aria-hidden="true"></span>
+      <div class="device" role="region" aria-label="The site, playing on an old TV">
+        <div class="antenna" aria-hidden="true"></div>
+        <div class="tube">
         <div class="screen" id="screen">
           <div class="site" id="site">
             <main>
@@ -140,30 +140,31 @@
             </footer>
           </div>
           <nav class="dock" aria-label="Sections"><a href="#intro">Home</a><a href="#work">Work</a><a href="#about">About</a><a href="#contact">Contact</a></nav>
-          <div class="home" aria-hidden="true">
-            <div class="inner-body">
-            <p class="inner-eyebrow">Cairo, Egypt · Independent web developer</p>
-            <p class="inner-title">Digital craft,<br><em>made distinct.</em></p>
+          <div class="glass" aria-hidden="true"></div>
+          <div class="ident" aria-hidden="true">
+            <div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <p class="ident-ch">CH 01</p>
+            <p class="ident-name">Ahmed Khalil</p>
+            <p class="ident-sub">Now showing: the portfolio</p>
+          </div>
+          <div class="signoff" aria-hidden="true">
+            <div class="so-inner">
+              <p class="so-tag">That’s all for tonight</p>
+              <p class="so-title">Have something <em>good in mind?</em></p>
+              <a class="btn primary" href="mailto:ahmedmohamedkhalilx@gmail.com?subject=New%20project" tabindex="-1">Start a conversation <span aria-hidden="true">↗</span></a>
+              <p class="so-mail">ahmedmohamedkhalilx@gmail.com</p>
             </div>
-            <div class="inner-nav"><a href="#intro" tabindex="-1">Home</a><a href="#work" tabindex="-1">Work</a><a href="#about" tabindex="-1">About</a><a href="#contact" tabindex="-1">Contact</a></div>
           </div>
-          <div class="lock" aria-hidden="true">
-          <p class="lock-time" data-clock>14:32</p>
-          <p class="lock-sub">Web developer · Cairo</p>
-          <ul class="notes">
-          <li><span class="note-icon">H</span><span class="note-text"><b>HELCO is live</b><small>Bilingual site · EN / AR</small></span></li>
-          <li><span class="note-icon">T</span><span class="note-text"><b>Tessera speaks Arabic</b><small>Shopify store · right to left</small></span></li>
-          </ul>
-          <p class="lock-hint">Scroll to unlock</p>
-          </div>
-          <div class="call" aria-hidden="true">
-            <p class="call-name">Ahmed Khalil</p>
-            <p class="call-sub">Incoming call · about your next project</p>
-            <span class="call-avatar">AK</span>
-            <a class="call-btn" href="mailto:ahmedmohamedkhalilx@gmail.com?subject=New%20project" tabindex="-1"><span class="call-knob">↗</span>Start a conversation</a>
-            <p class="call-mail">ahmedmohamedkhalilx@gmail.com</p>
-          </div>
+          <div class="off" aria-hidden="true"><p class="off-hint">Scroll to switch on</p></div>
+          <div class="power" aria-hidden="true"></div>
         </div>
+        </div>
+        <aside class="set-panel">
+          <p class="plate">Khalil<span>Colour television</span></p>
+          <div class="stripes" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <button class="dial" id="dial" type="button" aria-label="Turn to the next section"></button>
+          <div class="grille" aria-hidden="true"></div>
+        </aside>
       </div>
     </div>
   </div>
@@ -196,6 +197,6 @@
     }
   }
   </script>
-  <script type="module" src="script.js?v=20261022a"></script>
+  <script type="module" src="script.js?v=20261022b"></script>
 </body>
 </html>

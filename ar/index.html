@@ -20,8 +20,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Amiri:wght@400;700&display=swap">
-  <link rel="stylesheet" href="../style.css?v=20261022a">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lalezar&family=Righteous&family=Rubik:wght@400;500;600&family=VT323&display=swap">
+  <link rel="stylesheet" href="../style.css?v=20261022b">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -36,13 +36,13 @@
     </nav>
   </header>
 
-  <!-- the whole site plays on an iPad: it unlocks, turns to landscape, the site scrolls on its screen,
-       and at the end it turns back to a call screen -->
+  <!-- the whole site plays on an old TV: it switches on, the site scrolls on its screen, and at the end it signs off -->
   <div class="runway" id="top">
     <div class="stage">
       <p class="giant" aria-hidden="true"><span>أحمد</span><span>خليل</span></p>
-      <div class="device" role="region" aria-label="الموقع معروضاً على جهاز آيباد">
-        <span class="cam" aria-hidden="true"></span>
+      <div class="device" role="region" aria-label="الموقع يُعرض على تلفاز قديم">
+        <div class="antenna" aria-hidden="true"></div>
+        <div class="tube">
         <div class="screen" id="screen">
           <div class="site" id="site">
             <main>
@@ -141,30 +141,31 @@
             </footer>
           </div>
           <nav class="dock" aria-label="الأقسام"><a href="#intro">الرئيسية</a><a href="#work">الأعمال</a><a href="#about">نبذة</a><a href="#contact">تواصل</a></nav>
-          <div class="home" aria-hidden="true">
-            <div class="inner-body">
-            <p class="inner-eyebrow">القاهرة، مصر · مطوّر مواقع مستقل</p>
-            <p class="inner-title">حِرفة رقمية،<br><em>بطابع لا يشبه غيره.</em></p>
+          <div class="glass" aria-hidden="true"></div>
+          <div class="ident" aria-hidden="true">
+            <div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <p class="ident-ch">قناة 01</p>
+            <p class="ident-name">أحمد خليل</p>
+            <p class="ident-sub">يُعرض الآن: الأعمال</p>
+          </div>
+          <div class="signoff" aria-hidden="true">
+            <div class="so-inner">
+              <p class="so-tag">هذا كل شيء الليلة</p>
+              <p class="so-title">لديك فكرة <em>جيدة في بالك؟</em></p>
+              <a class="btn primary" href="mailto:ahmedmohamedkhalilx@gmail.com?subject=%D9%85%D8%B4%D8%B1%D9%88%D8%B9%20%D8%AC%D8%AF%D9%8A%D8%AF" tabindex="-1">ابدأ المحادثة <span aria-hidden="true">↖</span></a>
+              <p class="so-mail" dir="ltr">ahmedmohamedkhalilx@gmail.com</p>
             </div>
-            <div class="inner-nav"><a href="#intro" tabindex="-1">الرئيسية</a><a href="#work" tabindex="-1">الأعمال</a><a href="#about" tabindex="-1">نبذة</a><a href="#contact" tabindex="-1">تواصل</a></div>
           </div>
-          <div class="lock" aria-hidden="true">
-          <p class="lock-time" data-clock>14:32</p>
-          <p class="lock-sub">مطوّر مواقع · القاهرة</p>
-          <ul class="notes">
-          <li><span class="note-icon">H</span><span class="note-text"><b>موقع HELCO متاح الآن</b><small>موقع بلغتين · عربي / إنجليزي</small></span></li>
-          <li><span class="note-icon">T</span><span class="note-text"><b>Tessera تتحدث العربية</b><small>متجر شوبيفاي · من اليمين إلى اليسار</small></span></li>
-          </ul>
-          <p class="lock-hint">مرّر للأسفل لفتح القفل</p>
-          </div>
-          <div class="call" aria-hidden="true">
-            <p class="call-name">أحمد خليل</p>
-            <p class="call-sub">مكالمة واردة · عن مشروعك القادم</p>
-            <span class="call-avatar">أخ</span>
-            <a class="call-btn" href="mailto:ahmedmohamedkhalilx@gmail.com?subject=%D9%85%D8%B4%D8%B1%D9%88%D8%B9%20%D8%AC%D8%AF%D9%8A%D8%AF" tabindex="-1"><span class="call-knob">↖</span>ابدأ المحادثة</a>
-            <p class="call-mail" dir="ltr">ahmedmohamedkhalilx@gmail.com</p>
-          </div>
+          <div class="off" aria-hidden="true"><p class="off-hint">مرّر لتشغيل التلفاز</p></div>
+          <div class="power" aria-hidden="true"></div>
         </div>
+        </div>
+        <aside class="set-panel">
+          <p class="plate">خليل<span>تلفاز ملوّن</span></p>
+          <div class="stripes" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <button class="dial" id="dial" type="button" aria-label="أدر القرص إلى القسم التالي"></button>
+          <div class="grille" aria-hidden="true"></div>
+        </aside>
       </div>
     </div>
   </div>
@@ -197,6 +198,6 @@
     }
   }
   </script>
-  <script type="module" src="../script.js?v=20261022a"></script>
+  <script type="module" src="../script.js?v=20261022b"></script>
 </body>
 </html>
