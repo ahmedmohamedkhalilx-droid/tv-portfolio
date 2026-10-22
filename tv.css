@@ -1,5 +1,5 @@
-/* The retro TV: the window is a 1970s set, and the site plays on its tube.
-   The page itself never scrolls; the screen does. */
+/* The site plays on a 1970s TV. The set starts far away; scrolling switches it on and brings it closer until
+   it fills the window, then the page scroll moves the programme on its screen (tv.js drives all of it). */
 
 :root {
   --wood: #5e391f; --wood-dark: #3b2212; --wood-light: #82532f;
@@ -16,18 +16,35 @@
 :lang(ar) { --display: "Lalezar", "Rubik", system-ui, sans-serif; }
 
 * { box-sizing: border-box; }
-html, body { height: 100%; margin: 0; }
-body {
-  overflow: hidden; font: 400 1rem/1.6 var(--body); color: var(--ink);
-  background: radial-gradient(120% 90% at 50% 0%, #2a1a10, #120b07 70%); /* the room behind the set */
+html, body { margin: 0; }
+body { font: 400 1rem/1.6 var(--body); color: var(--ink); background: #000000; overflow-x: hidden; } /* the dark room the set stands in */
+
+/* ---------- the room: a scroll runway with the set held in view ---------- */
+.runway { position: relative; height: 100vh; } /* the real height is set by tv.js */
+.stage { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow: hidden; display: grid; place-items: center; }
+.giant {
+  position: absolute; inset: 0; margin: 0; display: flex; justify-content: space-between; align-items: center; padding: 0 2vw;
+  font: 400 clamp(3.5rem, 16vw, 16rem) / .8 var(--display); text-transform: uppercase; color: var(--ink); pointer-events: none;
+  text-shadow: .03em .03em 0 var(--red), .06em .06em 0 rgba(240, 139, 37, .55); /* a 70s drop-print */
 }
+.antenna { /* rabbit ears, seen while the set is still across the room */
+  position: absolute; left: 40%; bottom: 100%; width: 90px; height: 30px; margin-left: -45px; border-radius: 40px 40px 6px 6px;
+  background: radial-gradient(circle at 50% 30%, #4a3020, #24160c); pointer-events: none;
+}
+.antenna::before, .antenna::after {
+  content: ""; position: absolute; left: 50%; bottom: 16px; width: 4px; height: min(220px, 26vh); border-radius: 2px;
+  background: linear-gradient(180deg, #e8dcc4, #8d8170); transform-origin: 50% 100%;
+}
+.antenna::before { transform: rotate(-32deg); }
+.antenna::after { transform: rotate(28deg); }
 a { color: inherit; }
 button { font: inherit; color: inherit; cursor: pointer; }
 :focus-visible { outline: 2px solid var(--mustard); outline-offset: 3px; }
 
 /* ---------- the cabinet ---------- */
 .tv {
-  height: 100dvh; padding: clamp(10px, 1.6vw, 22px); display: grid; gap: clamp(10px, 1.4vw, 20px);
+  position: relative; width: 100vw; height: 100vh; height: 100dvh; transform-origin: 50% 50%; will-change: transform;
+  box-shadow: 0 60px 140px rgba(0, 0, 0, .8); padding: clamp(10px, 1.6vw, 22px); display: grid; gap: clamp(10px, 1.4vw, 20px);
   grid-template-columns: minmax(0, 1fr) clamp(190px, 17vw, 250px);
   border-radius: clamp(14px, 2vw, 30px);
   background: /* walnut veneer: long grain, a few darker streaks, a soft sheen */
@@ -35,7 +52,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
     repeating-linear-gradient(92deg, transparent 0 14px, rgba(0, 0, 0, .07) 14px 15px, transparent 15px 37px, rgba(255, 220, 170, .05) 37px 39px),
     repeating-linear-gradient(88deg, transparent 0 90px, rgba(0, 0, 0, .12) 90px 96px, transparent 96px 210px),
     linear-gradient(90deg, var(--wood-dark), var(--wood) 18%, var(--wood-light) 50%, var(--wood) 82%, var(--wood-dark));
-  box-shadow: inset 0 2px 0 rgba(255, 230, 190, .18), inset 0 -3px 0 rgba(0, 0, 0, .35);
+  box-shadow: 0 60px 140px rgba(0, 0, 0, .85), inset 0 2px 0 rgba(255, 230, 190, .18), inset 0 -3px 0 rgba(0, 0, 0, .35);
 }
 
 /* the bezel and the tube */
@@ -51,12 +68,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
   box-shadow: 0 0 0 2px #070504;
 }
 .crt {
-  position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain;
-  scroll-snap-type: y proximity; scrollbar-width: none;
+  position: absolute; inset: 0; overflow: hidden;
   text-shadow: 0 0 .5px rgba(244, 231, 203, .6), 0 0 10px rgba(244, 231, 203, .12); /* phosphor bloom */
 }
-.crt::-webkit-scrollbar { display: none; }
-.crt:focus-visible { outline: none; }
+.reel { position: absolute; inset: 0 0 auto; will-change: transform; } /* the programme, moved by the page scroll */
 
 /* the glass over the picture: scanlines, a dark rim, and a reflection of the room */
 .glass, .glass::before, .glass::after { position: absolute; inset: 0; pointer-events: none; border-radius: inherit; }
@@ -71,15 +86,11 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .static.on { opacity: .92; animation: snow .18s steps(4) infinite; }
 @keyframes snow { 0% { background-position: 0 0; } 25% { background-position: -60px 40px; } 50% { background-position: 50px -70px; } 75% { background-position: -90px -20px; } }
 
-/* switching the set on: a bright line opens into the picture */
-.power { position: absolute; inset: 0; z-index: 8; pointer-events: none; background: #fff6e4; transform: scaleY(.004); opacity: 0; }
-.js .power { opacity: 1; }
-.js.on .power { animation: power-on .9s var(--ease) forwards; }
-@keyframes power-on {
-  0% { transform: scale(.6, .004); opacity: 1; }
-  35% { transform: scale(1, .004); opacity: 1; }
-  100% { transform: scale(1, 1); opacity: 0; }
-}
+/* switching the set on: the dark glass, then a bright line that opens into the picture (driven by the scroll) */
+.off { position: absolute; inset: 0; z-index: 9; display: grid; place-items: end center; padding-bottom: 9%; pointer-events: none; border-radius: inherit;
+  background: radial-gradient(ellipse 70% 60% at 35% 25%, rgba(255, 245, 225, .07), transparent 60%), radial-gradient(ellipse at 50% 50%, #1f1a15, #0b0907 75%); }
+.off-hint { margin: 0; padding: .45em 1.1em; border-radius: 99px; background: rgba(244, 231, 203, .08); font: 400 1.4rem/1 var(--crt-font); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.power { position: absolute; inset: 0; z-index: 10; pointer-events: none; background: #fff6e4; opacity: 0; transform: scaleY(.004); }
 
 /* on-screen display: the channel number, in the set's own green */
 .osd {
@@ -147,7 +158,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* ---------- what plays on the screen ---------- */
 .ch {
-  position: relative; min-height: 100%; scroll-snap-align: start;
+  position: relative; min-height: var(--sh, 100vh); /* each channel fills the screen at least */
   padding: clamp(3.2rem, 9vh, 6rem) clamp(1.4rem, 6%, 5rem) clamp(2.6rem, 7vh, 4.5rem);
   display: flex; flex-direction: column; justify-content: center;
 }
@@ -268,9 +279,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 @media (prefers-reduced-motion: reduce) {
   .flicker, .static.on { animation: none; }
-  .js.on .power { animation: none; opacity: 0; }
   .knob { transition: none; }
-  .crt { scroll-behavior: auto; }
 }
 
 /* ---------- Arabic ---------- */
@@ -282,3 +291,5 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* the pixel font has no Arabic, and spacing letters apart breaks Arabic joining */
 :lang(ar) :is(.osd, .tag, .hint-line, .signoff, .program-no, .study h4, .bc-bar, .contact-links a) { font-family: var(--body); letter-spacing: 0; }
 :lang(ar) .tag, :lang(ar) .hint-line, :lang(ar) .signoff { font-size: 1rem; }
+:lang(ar) .giant { text-shadow: -.03em .03em 0 var(--red), -.06em .06em 0 rgba(240, 139, 37, .55); }
+:lang(ar) .off-hint { font-family: var(--body); font-size: 1rem; letter-spacing: 0; }

@@ -2,9 +2,10 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>أحمد خليل | حِرفة رقمية بطابع مميز</title>
   <meta name="description" content="أحمد خليل، مطوّر مواقع مستقل في القاهرة. مواقع ومتاجر إلكترونية مدروسة بالعربية والإنجليزية: HELCO وTessera وThe Dental Hauz.">
+  <meta name="theme-color" content="#3b2212">
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="canonical" href="https://ahmedmohamedkhalilx-droid.github.io/tv-portfolio/ar/">
   <link rel="alternate" hreflang="en" href="https://ahmedmohamedkhalilx-droid.github.io/tv-portfolio/">
@@ -12,192 +13,158 @@
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ar_EG">
   <meta property="og:title" content="أحمد خليل | حِرفة رقمية بطابع مميز">
-  <meta property="og:description" content="مواقع ومتاجر إلكترونية مدروسة، بالعربية والإنجليزية وكل ما بينهما.">
+  <meta property="og:description" content="الأعمال تُعرض على تلفاز من السبعينيات، قناة بعد قناة.">
   <meta property="og:url" content="https://ahmedmohamedkhalilx-droid.github.io/tv-portfolio/ar/">
   <meta property="og:image" content="https://ahmedmohamedkhalilx-droid.github.io/tv-portfolio/assets/og.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lalezar&family=Righteous&family=Rubik:wght@400;500;600&family=VT323&display=swap">
-  <link rel="stylesheet" href="../style.css?v=20261022b">
+  <link rel="stylesheet" href="../tv.css?v=20261022c">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="#top">أحمد خليل</a>
-    <nav class="topnav" aria-label="الأقسام">
-      <a href="#work">الأعمال</a>
-      <a href="#about">نبذة</a>
-      <a href="#contact">تواصل</a>
-      <a class="alt" href="../retro/ar/">التلفاز القديم</a>
-      <a class="lang" href="../" hreflang="en" lang="en">English</a>
-    </nav>
-  </header>
+  <!-- the whole site plays on a 1970s TV: it starts far away, switches on and comes closer as you scroll,
+       then the site plays on its screen -->
+  <div class="runway">
+  <div class="stage">
+  <p class="giant" aria-hidden="true"><span>أحمد</span><span>خليل</span></p>
+  <div class="tv">
+    <div class="antenna" aria-hidden="true"></div>
+    <div class="bezel">
+      <div class="tube">
+        <main class="crt" id="screen" aria-label="شاشة التلفاز: مرّر للمشاهدة، أو غيّر القناة من أزرار التحكم">
+          <div class="reel" id="reel">
 
-  <!-- the whole site plays on an old TV: it switches on, the site scrolls on its screen, and at the end it signs off -->
-  <div class="runway" id="top">
-    <div class="stage">
-      <p class="giant" aria-hidden="true"><span>أحمد</span><span>خليل</span></p>
-      <div class="device" role="region" aria-label="الموقع يُعرض على تلفاز قديم">
-        <div class="antenna" aria-hidden="true"></div>
-        <div class="tube">
-        <div class="screen" id="screen">
-          <div class="site" id="site">
-            <main>
-              <section class="hero" id="intro">
-                <div class="container">
-                  <p class="eyebrow reveal"><span class="dot"></span>القاهرة، مصر <span class="rule"></span> مطوّر مواقع مستقل</p>
-                  <h1 class="reveal">حِرفة رقمية،<br><em>بطابع لا يشبه غيره.</em></h1>
-                  <p class="lede reveal">أبني مواقع ومتاجر إلكترونية مدروسة لعلامات تجارية طموحة، بالعربية والإنجليزية وكل ما بينهما.</p>
-                  <div class="ctas reveal">
-                    <a class="btn primary" href="#work">استكشف الأعمال <span aria-hidden="true">↙</span></a>
-                    <a class="btn ghost" href="#contact">لنتحدث <span aria-hidden="true">↖</span></a>
-                  </div>
-                  <ul class="meta reveal">
-                    <li>مستقل عن قناعة</li>
-                    <li>مبني على التفاصيل</li>
-                    <li>عربي · إنجليزي · RTL</li>
-                  </ul>
-                </div>
-              </section>
-
-              <section class="about" id="about">
-                <div class="container split">
-                  <div>
-                    <p class="kicker reveal">01 / وجهة النظر</p>
-                    <h2 class="reveal">العمل الجيد يُشعَر به<br><em>قبل أن يُشرح.</em></h2>
-                  </div>
-                  <div class="about-body">
-                    <p class="reveal">أنا أحمد، مطوّر مواقع في القاهرة. أجمع بين الاستراتيجية والتصميم والهندسة لأصنع تجارب رقمية واضحة ومدروسة، وتشبهك أنت.</p>
-                    <p class="reveal">من أول موقع حقيقي لشركة، إلى متجر إلكتروني يعمل بجمال بلغتين، يهمني ما يحدث بعد الانطباع الأول.</p>
-                    <dl class="stats reveal">
-                      <div><dt>03</dt><dd>مشاريع مختارة</dd></div>
-                      <div><dt>02</dt><dd>لغتان، مبنيتان بالكامل</dd></div>
-                      <div><dt>03</dt><dd>منصات في الأعمال</dd></div>
-                    </dl>
-                  </div>
-                </div>
-              </section>
-
-              <section class="work" id="work">
-                <div class="container">
-                  <p class="kicker reveal">02 / أعمال مختارة</p>
-                  <h2 class="reveal">صُنعت <em>بعناية.</em></h2>
-                  <p class="section-lede reveal">مجموعة صغيرة من المشاريع بُنيت حول أشخاص حقيقيين واحتياجات حقيقية وتجربة أفضل.</p>
-                </div>
-                <div class="stage">
-                  <div class="wall" id="wall" aria-label="ثلاثة هواتف، يعرض كل منها مشروعاً: HELCO وTessera وThe Dental Hauz. اضغط على هاتف، أو على اسمه بالأسفل، لفتح المشروع."></div>
-                </div>
-                <nav class="open-row" aria-label="المشاريع">
-                  <button data-open="helco" type="button"><span class="label-name">HELCO</span><span class="label-kind">شركات · Next.js · عربي / إنجليزي</span></button>
-                  <button data-open="tessera" type="button"><span class="label-name">Tessera</span><span class="label-kind">تجارة إلكترونية · Shopify · عربي / إنجليزي</span></button>
-                  <button data-open="dental" type="button"><span class="label-name">The Dental Hauz</span><span class="label-kind">رعاية صحية · WordPress</span></button>
-                </nav>
-                <p class="hint"><span class="hint-hover">مرّر المؤشر على هاتف لتقريبه، واضغط عليه لفتح المشروع.</span><span class="hint-touch">اضغط على هاتف لفتح المشروع.</span></p>
-              </section>
-
-              <section class="expertise" id="expertise">
-                <div class="container">
-                  <p class="kicker reveal">03 / الخبرات</p>
-                  <h2 class="reveal">عناية من أول بكسل<br><em>حتى الإطلاق.</em></h2>
-                  <p class="section-lede reveal">المزيج الصحيح من الدقة الإبداعية والهندسة المتينة، مصمم حول عملك.</p>
-                  <ol class="cards">
-                    <li class="reveal"><span class="num">01</span><h3>مواقع لها هدف</h3><p>مواقع سريعة ومتجاوبة بوجهة نظر واضحة، مبنية لتروي قصتك وتجعل الخطوة التالية طبيعية.</p></li>
-                    <li class="reveal"><span class="num">02</span><h3>متاجر تبيع</h3><p>تجارب تسوّق تجعل الاكتشاف واختيار المنتج والدفع سهلاً على كل الشاشات.</p></li>
-                    <li class="reveal"><span class="num">03</span><h3>العربية والإنجليزية، كما يجب</h3><p>ليست مجرد ترجمة. تجارب بلغتين مدروسة بالكامل، بأساس حقيقي للكتابة من اليمين إلى اليسار، وخطوط مقروءة، وتبديل سلس بين اللغتين.</p></li>
-                    <li class="reveal"><span class="num">04</span><h3>تطوير بعين المصمم</h3><p>واجهات متقنة، وتفاصيل تفاعل مدروسة، وشيفرة سهلة الاستخدام وقابلة للصيانة، دون أن تغيب الصورة الكاملة.</p></li>
-                  </ol>
-                </div>
-              </section>
-
-              <section class="approach" id="approach">
-                <div class="container">
-                  <p class="kicker reveal">04 / المنهج</p>
-                  <h2 class="reveal">طريق واضح.<br><em>نتائج أفضل.</em></h2>
-                  <p class="section-lede reveal">التعاون الجيد مدروس وشفاف، ومبني على قرارات صغيرة تُتخذ بشكل صحيح.</p>
-                  <ol class="steps">
-                    <li class="reveal"><span class="num">01</span><h3>اكتشاف</h3><p>نتّضح معاً حول الأشخاص والأهداف والفرص وراء المطلوب.</p></li>
-                    <li class="reveal"><span class="num">02</span><h3>تشكيل</h3><p>البنية، والاتجاه البصري، والتفاصيل التي تجعله يشبهك.</p></li>
-                    <li class="reveal"><span class="num">03</span><h3>بناء</h3><p>تطوير متأنٍ، وتحسين على أجهزة حقيقية، وتكرار مدروس.</p></li>
-                    <li class="reveal"><span class="num">04</span><h3>إطلاق</h3><p>تسليم واثق، مع مسار واضح لما يأتي بعده.</p></li>
-                  </ol>
-                </div>
-              </section>
-            </main>
-
-            <footer class="contact" id="contact">
-              <div class="container">
-                <p class="kicker reveal">القاهرة · أعمل من أي مكان</p>
-                <h2 class="reveal">لديك فكرة<br><em>جيدة في بالك؟</em></h2>
-                <p class="section-lede reveal">أخبرني بما تعمل عليه، وسأعود إليك بخطوة أولى مدروسة.</p>
-                <a class="btn primary reveal" href="mailto:ahmedmohamedkhalilx@gmail.com?subject=%D9%85%D8%B4%D8%B1%D9%88%D8%B9%20%D8%AC%D8%AF%D9%8A%D8%AF">ابدأ المحادثة <span aria-hidden="true">↖</span></a>
-                <p class="contact-links">
-                  <a href="mailto:ahmedmohamedkhalilx@gmail.com" dir="ltr">ahmedmohamedkhalilx@gmail.com <span aria-hidden="true">↗</span></a>
-                  <a href="https://github.com/ahmedmohamedkhalilx-droid" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↖</span></a>
-                </p>
+          <section class="ch" data-name="أحمد خليل" aria-label="القناة 1: أحمد خليل">
+            <div class="ch-inner">
+              <p class="tag">على الهواء من القاهرة</p>
+              <h1 class="title">حِرفة رقمية، <em>بطابع لا يشبه غيره.</em></h1>
+              <p class="lede">أبني مواقع ومتاجر إلكترونية مدروسة لعلامات تجارية طموحة، بالعربية والإنجليزية وكل ما بينهما.</p>
+              <div class="ctas">
+                <a class="btn hot" href="#ch3" data-goto="3">شاهد الأعمال</a>
+                <a class="btn" href="#ch6" data-goto="6">لنتحدث</a>
               </div>
-            </footer>
-          </div>
-          <nav class="dock" aria-label="الأقسام"><a href="#intro">الرئيسية</a><a href="#work">الأعمال</a><a href="#about">نبذة</a><a href="#contact">تواصل</a></nav>
-          <div class="glass" aria-hidden="true"></div>
-          <div class="ident" aria-hidden="true">
-            <div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-            <p class="ident-ch">قناة 01</p>
-            <p class="ident-name">أحمد خليل</p>
-            <p class="ident-sub">يُعرض الآن: الأعمال</p>
-          </div>
-          <div class="signoff" aria-hidden="true">
-            <div class="so-inner">
-              <p class="so-tag">هذا كل شيء الليلة</p>
-              <p class="so-title">لديك فكرة <em>جيدة في بالك؟</em></p>
-              <a class="btn primary" href="mailto:ahmedmohamedkhalilx@gmail.com?subject=%D9%85%D8%B4%D8%B1%D9%88%D8%B9%20%D8%AC%D8%AF%D9%8A%D8%AF" tabindex="-1">ابدأ المحادثة <span aria-hidden="true">↖</span></a>
-              <p class="so-mail" dir="ltr">ahmedmohamedkhalilx@gmail.com</p>
+              <div class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <p class="hint-line">مرّر الشاشة، أو أدر القرص لتغيير القناة.</p>
             </div>
+          </section>
+
+          <section class="ch" id="ch2" data-name="نبذة" aria-label="القناة 2: نبذة">
+            <div class="ch-inner">
+              <p class="tag">وجهة النظر</p>
+              <div class="cols">
+                <h2 class="title sm">العمل الجيد يُشعَر به <em>قبل أن يُشرح.</em></h2>
+                <div>
+                  <p>أنا أحمد، مطوّر مواقع في القاهرة. أجمع بين الاستراتيجية والتصميم والهندسة لأصنع تجارب رقمية واضحة ومدروسة، وتشبهك أنت.</p>
+                  <p>من أول موقع حقيقي لشركة، إلى متجر إلكتروني يعمل بجمال بلغتين، يهمني ما يحدث بعد الانطباع الأول.</p>
+                  <dl class="facts">
+                    <div><dt>3</dt><dd>مشاريع مختارة</dd></div>
+                    <div><dt>2</dt><dd>لغتان، مبنيتان بالكامل</dd></div>
+                    <div><dt>3</dt><dd>منصات في الأعمال</dd></div>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="ch" id="ch3" data-name="الأعمال" aria-label="القناة 3: الأعمال">
+            <div class="ch-inner">
+              <p class="tag">برامج الليلة</p>
+              <h2 class="title sm">صُنعت <em>بعناية.</em></h2>
+              <p class="lede">ثلاثة مشاريع بُنيت حول أشخاص حقيقيين واحتياجات حقيقية. شاهد أياً منها هنا على هذه الشاشة.</p>
+              <ol class="programs" id="programs"></ol>
+            </div>
+          </section>
+
+          <section class="ch" data-name="الخبرات" aria-label="القناة 4: الخبرات">
+            <div class="ch-inner">
+              <p class="tag">ما أقدمه</p>
+              <h2 class="title sm">عناية من أول بكسل <em>حتى الإطلاق.</em></h2>
+              <ul class="rows">
+                <li><h3>مواقع لها هدف</h3><p>مواقع سريعة ومتجاوبة بوجهة نظر واضحة، مبنية لتروي قصتك وتجعل الخطوة التالية طبيعية.</p></li>
+                <li><h3>متاجر تبيع</h3><p>تجارب تسوّق تجعل الاكتشاف واختيار المنتج والدفع سهلاً على كل الشاشات.</p></li>
+                <li><h3>العربية والإنجليزية، كما يجب</h3><p>ليست مجرد ترجمة. تجارب بلغتين مدروسة بالكامل، بأساس حقيقي للكتابة من اليمين إلى اليسار، وخطوط مقروءة، وتبديل سلس بين اللغتين.</p></li>
+                <li><h3>تطوير بعين المصمم</h3><p>واجهات متقنة، وتفاصيل تفاعل مدروسة، وشيفرة سهلة الاستخدام وقابلة للصيانة، دون أن تغيب الصورة الكاملة.</p></li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="ch" data-name="المنهج" aria-label="القناة 5: المنهج">
+            <div class="ch-inner">
+              <p class="tag">كيف يسير العمل</p>
+              <h2 class="title sm">طريق واضح. <em>نتائج أفضل.</em></h2>
+              <ol class="rows steps">
+                <li><span class="n">1</span><h3>اكتشاف</h3><p>نتّضح معاً حول الأشخاص والأهداف والفرص وراء المطلوب.</p></li>
+                <li><span class="n">2</span><h3>تشكيل</h3><p>البنية، والاتجاه البصري، والتفاصيل التي تجعله يشبهك.</p></li>
+                <li><span class="n">3</span><h3>بناء</h3><p>تطوير متأنٍ، وتحسين على أجهزة حقيقية، وتكرار مدروس.</p></li>
+                <li><span class="n">4</span><h3>إطلاق</h3><p>تسليم واثق، مع مسار واضح لما يأتي بعده.</p></li>
+              </ol>
+            </div>
+          </section>
+
+          <section class="ch" id="ch6" data-name="تواصل" aria-label="القناة 6: تواصل">
+            <div class="ch-inner">
+              <p class="tag">اتصل بالمحطة</p>
+              <h2 class="title">لديك فكرة <em>جيدة في بالك؟</em></h2>
+              <p class="lede">أخبرني بما تعمل عليه، وسأعود إليك بخطوة أولى مدروسة.</p>
+              <div class="ctas"><a class="btn hot" href="mailto:ahmedmohamedkhalilx@gmail.com?subject=%D9%85%D8%B4%D8%B1%D9%88%D8%B9%20%D8%AC%D8%AF%D9%8A%D8%AF">ابدأ المحادثة ↖</a></div>
+              <p class="contact-links">
+                <a href="mailto:ahmedmohamedkhalilx@gmail.com" dir="ltr">ahmedmohamedkhalilx@gmail.com</a>
+                <a href="https://github.com/ahmedmohamedkhalilx-droid" target="_blank" rel="noopener">GitHub ↖</a>
+              </p>
+              <p class="signoff">هذا كل شيء الليلة. شكراً للمشاهدة.</p>
+            </div>
+          </section>
           </div>
-          <div class="off" aria-hidden="true"><p class="off-hint">مرّر لتشغيل التلفاز</p></div>
-          <div class="power" aria-hidden="true"></div>
+        </main>
+
+        <div class="broadcast" id="broadcast" hidden>
+          <div class="bc-bar">
+            <button id="bc-back" type="button">▶ العودة إلى القنوات</button>
+            <p class="bc-title" id="bc-title"></p>
+            <a id="bc-link" href="#" target="_blank" rel="noopener">افتح الموقع ↖</a>
+          </div>
+          <iframe id="bc-frame" title="" src="about:blank"></iframe>
         </div>
-        </div>
-        <aside class="set-panel">
-          <p class="plate">خليل<span>تلفاز ملوّن</span></p>
-          <div class="stripes" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-          <button class="dial" id="dial" type="button" aria-label="أدر القرص إلى القسم التالي"></button>
-          <div class="grille" aria-hidden="true"></div>
-        </aside>
+
+        <div class="glass" aria-hidden="true"></div>
+        <div class="flicker" aria-hidden="true"></div>
+        <div class="static" id="static" aria-hidden="true"></div>
+        <div class="off" aria-hidden="true"><p class="off-hint">مرّر لتشغيل التلفاز</p></div>
+        <div class="power" aria-hidden="true"></div>
+        <p class="osd" id="osd" aria-live="polite"><span class="osd-ch">قناة 01</span><span class="osd-name">أحمد خليل</span></p>
       </div>
     </div>
-  </div>
 
-  <div class="project" id="project" hidden>
-    <div class="frame" id="frame" role="dialog" aria-modal="true" aria-labelledby="p-title">
-      <div class="bar">
-        <div class="info">
-          <h2 id="p-title"></h2>
-          <p id="p-desc"></p>
-        </div>
-        <div class="actions">
-          <button id="study-toggle" type="button" aria-controls="study" aria-expanded="false">دراسة الحالة</button>
-          <a id="p-link" href="#" target="_blank" rel="noopener">افتح في نافذة جديدة &#8599;</a>
-          <button id="close" type="button">&times; إغلاق</button>
-        </div>
+    <aside class="panel" aria-label="أزرار التحكم">
+      <p class="plate">خليل<span>تلفاز ملوّن</span></p>
+      <div class="stripes" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div class="dial">
+        <ol class="dial-marks" aria-hidden="true">
+          <li style="--a:0deg">1</li><li style="--a:60deg">2</li><li style="--a:120deg">3</li><li style="--a:180deg">4</li><li style="--a:240deg">5</li><li style="--a:300deg">6</li>
+        </ol>
+        <button class="knob" id="knob" type="button" aria-label="أدر القرص إلى القناة التالية"></button>
       </div>
-      <div class="frame-body">
-        <div class="viewport" id="viewport" data-loading="جارٍ ضبط الإشارة…"></div>
-        <aside class="study" id="study" aria-label="دراسة الحالة"></aside>
+      <div class="chbtns">
+        <button id="ch-down" type="button" aria-label="القناة السابقة">CH−</button>
+        <button id="ch-up" type="button" aria-label="القناة التالية">CH+</button>
       </div>
-    </div>
+      <nav class="presets" aria-label="القنوات">
+        <button type="button"><b>1</b>البداية</button>
+        <button type="button"><b>2</b>نبذة</button>
+        <button type="button"><b>3</b>الأعمال</button>
+        <button type="button"><b>4</b>الخبرات</button>
+        <button type="button"><b>5</b>المنهج</button>
+        <button type="button"><b>6</b>تواصل</button>
+      </nav>
+      <div class="grille" aria-hidden="true"></div>
+      <nav class="switches" aria-label="نسخ أخرى">
+        <a href="../" hreflang="en" lang="en">English</a>
+      </nav>
+    </aside>
   </div>
-
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-    }
-  }
-  </script>
-  <script type="module" src="../script.js?v=20261022b"></script>
+  </div>
+  </div>
+  <script type="module" src="../tv.js?v=20261022c"></script>
 </body>
 </html>

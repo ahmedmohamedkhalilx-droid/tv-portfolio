@@ -1,11 +1,12 @@
-import { getProjects } from '../projects.js?v=20261020a';
+import { getProjects } from './projects.js?v=20261022c';
 
-// The retro TV: the page never scrolls, the screen does. Each section is a channel; the dial,
-// the preset buttons and the number keys change channel with a burst of static, and a project
-// can be watched on the set itself.
+// The site plays on a 1970s TV. The page scroll is a timeline: the set starts far away and switched off,
+// scrolling switches it on and brings it closer until it fills the window, then the scroll moves the
+// programme on its screen. Each section is a channel; the dial, the preset buttons and the number keys
+// change channel with a burst of static, and a project can be watched on the set itself.
 
 const LANG = document.documentElement.lang === 'ar' ? 'ar' : 'en';
-const ROOT = new URL('../', import.meta.url); // the site root
+const ROOT = new URL('./', import.meta.url); // the site root
 const at = (path) => new URL(path, ROOT).href;
 const UI = {
   en: {
@@ -26,7 +27,8 @@ const ORDER = ['helco', 'tessera', 'dental'];
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const screen = document.getElementById('screen');
-const channels = [...screen.querySelectorAll('.ch')];
+const reel = document.getElementById('reel');
+const channels = [...reel.querySelectorAll('.ch')];
 const presets = [...document.querySelectorAll('.presets button')];
 const knob = document.getElementById('knob');
 const osd = document.getElementById('osd');
@@ -105,17 +107,11 @@ function goTo(i) {
   i = (i + channels.length) % channels.length;
   if (!broadcast.hidden) closeBroadcast(false);
   burst(() => {
-    screen.scrollTo({ top: channels[i].offsetTop, behavior: 'instant' });
+    window.scrollTo({ top: channelTop(i), behavior: 'instant' });
     current = -1;
     mark(i);
   });
 }
-// the channel whose picture crosses the middle of the screen is the one that's on
-const watcher = new IntersectionObserver((entries) => {
-  entries.forEach((e) => { if (e.isIntersecting) mark(channels.indexOf(e.target)); });
-}, { root: screen, rootMargin: '-50% 0px -50% 0px', threshold: 0 });
-channels.forEach((c) => watcher.observe(c));
-
 presets.forEach((b, i) => b.addEventListener('click', () => goTo(i)));
 knob.addEventListener('click', () => goTo(current + 1));
 document.getElementById('ch-up').addEventListener('click', () => goTo(current + 1));
@@ -150,16 +146,89 @@ function closeBroadcast(withStatic) {
   const done = () => {
     broadcast.hidden = true;
     bcFrame.src = 'about:blank';
-    (lastTrigger || screen).focus({ preventScroll: true });
+    if (lastTrigger) lastTrigger.focus({ preventScroll: true });
   };
   if (withStatic) burst(done); else done();
 }
 bcBack.addEventListener('click', () => closeBroadcast(true));
+// the page stays put while a site plays on the set (the site itself still scrolls inside its frame)
+const SCROLL_KEYS = [' ', 'ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End'];
+const holdStill = (e) => { if (!broadcast.hidden) e.preventDefault(); };
+window.addEventListener('wheel', holdStill, { passive: false });
+window.addEventListener('touchmove', holdStill, { passive: false });
+window.addEventListener('keydown', (e) => { if (SCROLL_KEYS.includes(e.key) && !e.target.closest('button, a')) holdStill(e); });
 
-// ---------- switch the set on ----------
-presets[0].setAttribute('aria-current', 'true');
-requestAnimationFrame(() => {
-  document.documentElement.classList.add('on');
-  screen.focus({ preventScroll: true }); // the arrow keys and space scroll the picture straight away
-  setTimeout(() => showOsd(chLabel(0), channels[0].dataset.name), reduceMotion ? 0 : 700);
+// ---------- the timeline: far away and off → on and close → the programme ----------
+const runway = document.querySelector('.runway');
+const stage = runway.querySelector('.stage');
+const tv = stage.querySelector('.tv');
+const giant = stage.querySelector('.giant');
+const antenna = stage.querySelector('.antenna');
+const offEl = stage.querySelector('.off');
+const powerEl = stage.querySelector('.power');
+const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+const clamp01 = (x) => Math.min(1, Math.max(0, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+
+let G = null;
+function measure() {
+  const vw = document.documentElement.clientWidth, vh = window.innerHeight;
+  const sh = screen.clientHeight;
+  stage.style.setProperty('--sh', sh + 'px');
+  const far = vw >= vh ? 0.5 : 0.62; // how big the set looks from across the room
+  const intro = reduceMotion ? 0 : vh * 1.4;
+  const travel = Math.max(0, reel.offsetHeight - sh);
+  G = { vh, sh, far, intro, travel };
+  runway.style.height = intro + travel + vh + 'px';
+}
+function channelTop(i) { return G.intro + Math.min(G.travel, channels[i].offsetTop); }
+
+let switchedOn = false;
+function update() {
+  if (!G) return;
+  const y = window.scrollY;
+  const on = reduceMotion ? 1 : clamp01(y / (G.intro * 0.3));                                // switching on
+  const near = reduceMotion ? 1 : easeInOut(clamp01((y - G.intro * 0.25) / (G.intro * 0.75))); // coming closer
+  const scroll = Math.min(G.travel, Math.max(0, y - G.intro));
+
+  tv.style.transform = `scale(${lerp(G.far, 1, near)})`;
+  tv.style.borderRadius = `${lerp(28, 0, near) / lerp(G.far, 1, near)}px`; // a free-standing set from afar, edge to edge up close
+  giant.style.opacity = (1 - near).toFixed(3);
+  antenna.style.opacity = clamp01(1 - near * 1.6).toFixed(3);
+
+  offEl.style.opacity = clamp01(1 - on / 0.35).toFixed(3);
+  const line = clamp01((on - 0.25) / 0.75);
+  powerEl.style.opacity = (on > 0.2 && on < 1 ? 1 - easeOut(line) : 0).toFixed(3);
+  powerEl.style.transform = `scale(${lerp(0.6, 1, clamp01(line * 3))}, ${lerp(0.004, 1, easeOut(clamp01((line - 0.3) / 0.7)))})`;
+  if (on >= 1 && !switchedOn) showOsd(chLabel(current), channels[current].dataset.name);
+  switchedOn = on >= 1;
+
+  reel.style.transform = `translate3d(0, ${-scroll}px, 0)`;
+  // the channel whose picture is in the middle of the screen is the one that's on
+  let i = 0;
+  channels.forEach((c, k) => { if (c.offsetTop <= scroll + G.sh * 0.5) i = k; });
+  if (switchedOn) mark(i);
+}
+
+// keyboard focus inside the screen brings that part of the programme into view (the screen itself never scrolls)
+reel.addEventListener('focusin', (e) => {
+  screen.scrollTop = 0;
+  let at = 0;
+  for (let n = e.target; n && n !== reel; n = n.offsetParent) at += n.offsetTop;
+  const shown = window.scrollY - G.intro;
+  if (shown < 0 || at < shown || at > shown + G.sh * 0.8) window.scrollTo({ top: G.intro + Math.min(G.travel, Math.max(0, at - G.sh * 0.35)), behavior: 'auto' });
 });
+screen.addEventListener('scroll', () => { screen.scrollTop = 0; });
+
+let ticking = false;
+window.addEventListener('scroll', () => {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(() => { ticking = false; update(); });
+}, { passive: true });
+function relayout() { measure(); update(); }
+window.addEventListener('resize', relayout);
+new ResizeObserver(relayout).observe(reel);
+presets[0].setAttribute('aria-current', 'true');
+relayout();
