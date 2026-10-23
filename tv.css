@@ -21,7 +21,7 @@ body { font: 400 1rem/1.6 var(--body); color: var(--ink); background: #000000; o
 
 /* ---------- the room: a scroll runway with the set held in view ---------- */
 .runway { position: relative; height: 100vh; } /* the real height is set by tv.js */
-.stage { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow: hidden; display: grid; place-items: center; }
+.stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; place-items: center; }
 .giant {
   position: absolute; inset: 0; margin: 0; display: flex; justify-content: space-between; align-items: center; padding: 0 2vw;
   font: 400 clamp(3.5rem, 16vw, 16rem) / .8 var(--display); text-transform: uppercase; color: var(--ink); pointer-events: none;
@@ -43,10 +43,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* ---------- the cabinet ---------- */
 .tv {
-  position: relative; width: 100vw; height: 100vh; height: 100dvh; transform-origin: 50% 50%; will-change: transform;
+  position: relative; width: 100vw; height: 100vh; height: 100svh; transform-origin: 50% 50%;
   box-shadow: 0 60px 140px rgba(0, 0, 0, .8); padding: clamp(10px, 1.6vw, 22px); display: grid; gap: clamp(10px, 1.4vw, 20px);
   grid-template-columns: minmax(0, 1fr) clamp(190px, 17vw, 250px);
-  border-radius: clamp(14px, 2vw, 30px);
+  border-radius: clamp(14px, 2vw, 30px); transition: border-radius .3s;
   background: /* walnut veneer: long grain, a few darker streaks, a soft sheen */
     linear-gradient(180deg, rgba(255, 255, 255, .08), transparent 18%, transparent 82%, rgba(0, 0, 0, .3)),
     repeating-linear-gradient(92deg, transparent 0 14px, rgba(0, 0, 0, .07) 14px 15px, transparent 15px 37px, rgba(255, 220, 170, .05) 37px 39px),
@@ -75,9 +75,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* the glass over the picture: scanlines, a dark rim, and a reflection of the room */
 .glass, .glass::before, .glass::after { position: absolute; inset: 0; pointer-events: none; border-radius: inherit; }
-.glass { z-index: 5; background: repeating-linear-gradient(180deg, rgba(0, 0, 0, .2) 0 1px, transparent 1px 3px); mix-blend-mode: multiply; }
-.glass::before { content: ""; background: radial-gradient(ellipse 75% 70% at 50% 50%, transparent 60%, rgba(0, 0, 0, .55) 100%); mix-blend-mode: normal; }
-.glass::after { content: ""; background: linear-gradient(125deg, rgba(255, 245, 225, .09), transparent 32%), radial-gradient(60% 40% at 20% 8%, rgba(255, 245, 225, .07), transparent 70%); mix-blend-mode: screen; }
+.glass { z-index: 5; background: repeating-linear-gradient(180deg, rgba(0, 0, 0, .2) 0 1px, transparent 1px 3px); }
+.glass::before { content: ""; background: radial-gradient(ellipse 75% 70% at 50% 50%, transparent 60%, rgba(0, 0, 0, .55) 100%); }
+.glass::after { content: ""; background: linear-gradient(125deg, rgba(255, 245, 225, .09), transparent 32%), radial-gradient(60% 40% at 20% 8%, rgba(255, 245, 225, .07), transparent 70%); }
 .flicker { position: absolute; inset: 0; z-index: 6; pointer-events: none; background: rgba(255, 240, 210, .025); animation: flicker 5s steps(1) infinite; }
 @keyframes flicker { 0%, 100% { opacity: 0; } 41% { opacity: 1; } 42% { opacity: 0; } 73% { opacity: .6; } 74% { opacity: 0; } }
 
@@ -171,10 +171,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .tag::before { content: ""; width: 2.4rem; height: 6px; border-radius: 1px; background: linear-gradient(90deg, var(--red) 0 25%, var(--orange) 25% 50%, var(--mustard) 50% 75%, var(--teal) 75%); }
 .title {
   margin: 0; max-width: 16ch; font: 400 clamp(2.3rem, 6.2vw, 5.6rem)/.98 var(--display); letter-spacing: -.01em; color: var(--ink);
-  text-shadow: 3px 3px 0 var(--red), 6px 6px 0 rgba(240, 139, 37, .55), 0 0 18px rgba(244, 231, 203, .15); /* a 70s drop-print */
+  text-shadow: 3px 3px 0 var(--red), 6px 6px 0 rgba(240, 139, 37, .55); /* a 70s drop-print */
   text-wrap: balance;
 }
-.title.sm { font-size: clamp(2rem, 4.6vw, 4rem); text-shadow: 3px 3px 0 var(--red), 0 0 14px rgba(244, 231, 203, .12); }
+.title.sm { font-size: clamp(2rem, 4.6vw, 4rem); text-shadow: 3px 3px 0 var(--red); }
 .title em { font-style: normal; color: var(--mustard); }
 .lede { max-width: 54ch; margin: 1.6rem 0 0; font-size: clamp(1rem, 1.4vw, 1.2rem); color: var(--muted); }
 .ctas { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 2rem; }
@@ -253,6 +253,14 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .bc-title { margin: 0; flex: 1; min-width: 8rem; color: var(--osd); text-transform: uppercase; }
 .broadcast iframe { flex: 1; width: 100%; border: 0; background: #0b0807; }
 
+/* the set up close loses its rounded corners and fills the window */
+.tv.close { border-radius: 0; }
+/* touch screens: no phosphor bloom or flicker, which phones pay for on every frame */
+@media (hover: none), (pointer: coarse) {
+  .crt { text-shadow: none; }
+  .flicker { display: none; }
+}
+
 /* ---------- smaller sets ---------- */
 @media (max-width: 1100px) {
   .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -284,8 +292,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* ---------- Arabic ---------- */
 :lang(ar) body { line-height: 1.85; }
-:lang(ar) .title { line-height: 1.25; letter-spacing: 0; text-shadow: -3px 3px 0 var(--red), -6px 6px 0 rgba(240, 139, 37, .55), 0 0 18px rgba(244, 231, 203, .15); }
-:lang(ar) .title.sm { text-shadow: -3px 3px 0 var(--red), 0 0 14px rgba(244, 231, 203, .12); }
+:lang(ar) .title { line-height: 1.25; letter-spacing: 0; text-shadow: -3px 3px 0 var(--red), -6px 6px 0 rgba(240, 139, 37, .55); }
+:lang(ar) .title.sm { text-shadow: -3px 3px 0 var(--red); }
 :lang(ar) .program h3 { text-shadow: -2px 2px 0 var(--red); }
 :lang(ar) .program .kind, :lang(ar) .plate span { letter-spacing: 0; }
 /* the pixel font has no Arabic, and spacing letters apart breaks Arabic joining */

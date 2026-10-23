@@ -1,4 +1,4 @@
-import { getProjects } from './projects.js?v=20261022c';
+import { getProjects } from './projects.js?v=20261023a';
 
 // The site plays on a 1970s TV. The page scroll is a timeline: the set starts far away and switched off,
 // scrolling switches it on and brings it closer until it fills the window, then the scroll moves the
@@ -179,10 +179,11 @@ function measure() {
   const far = vw >= vh ? 0.5 : 0.62; // how big the set looks from across the room
   const intro = reduceMotion ? 0 : vh * 1.4;
   const travel = Math.max(0, reel.offsetHeight - sh);
-  G = { vh, sh, far, intro, travel };
+  const tops = channels.map((c) => c.offsetTop); // read once here, never during the scroll
+  G = { vh, sh, far, intro, travel, tops };
   runway.style.height = intro + travel + vh + 'px';
 }
-function channelTop(i) { return G.intro + Math.min(G.travel, channels[i].offsetTop); }
+function channelTop(i) { return G.intro + Math.min(G.travel, G.tops[i]); }
 
 let switchedOn = false;
 function update() {
@@ -192,8 +193,11 @@ function update() {
   const near = reduceMotion ? 1 : easeInOut(clamp01((y - G.intro * 0.25) / (G.intro * 0.75))); // coming closer
   const scroll = Math.min(G.travel, Math.max(0, y - G.intro));
 
-  tv.style.transform = `scale(${lerp(G.far, 1, near)})`;
-  tv.style.borderRadius = `${lerp(28, 0, near) / lerp(G.far, 1, near)}px`; // a free-standing set from afar, edge to edge up close
+  // while the set moves it is its own layer; once it is close it settles, so the picture stays sharp and cheap to scroll
+  const moving = near < 1;
+  tv.style.transform = moving ? `scale(${lerp(G.far, 1, near)})` : 'none';
+  tv.style.willChange = moving ? 'transform' : 'auto';
+  tv.classList.toggle('close', !moving);
   giant.style.opacity = (1 - near).toFixed(3);
   antenna.style.opacity = clamp01(1 - near * 1.6).toFixed(3);
 
@@ -207,7 +211,7 @@ function update() {
   reel.style.transform = `translate3d(0, ${-scroll}px, 0)`;
   // the channel whose picture is in the middle of the screen is the one that's on
   let i = 0;
-  channels.forEach((c, k) => { if (c.offsetTop <= scroll + G.sh * 0.5) i = k; });
+  G.tops.forEach((t, k) => { if (t <= scroll + G.sh * 0.5) i = k; });
   if (switchedOn) mark(i);
 }
 
@@ -228,7 +232,9 @@ window.addEventListener('scroll', () => {
   requestAnimationFrame(() => { ticking = false; update(); });
 }, { passive: true });
 function relayout() { measure(); update(); }
-window.addEventListener('resize', relayout);
-new ResizeObserver(relayout).observe(reel);
+let relayoutQueued = false;
+const queueRelayout = () => { if (relayoutQueued) return; relayoutQueued = true; requestAnimationFrame(() => { relayoutQueued = false; relayout(); }); };
+window.addEventListener('resize', queueRelayout);
+new ResizeObserver(queueRelayout).observe(reel);
 presets[0].setAttribute('aria-current', 'true');
 relayout();
