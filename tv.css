@@ -22,11 +22,6 @@ body { font: 400 1rem/1.6 var(--body); color: var(--ink); background: #000000; o
 /* ---------- the room: a scroll runway with the set held in view ---------- */
 .runway { position: relative; height: 100vh; } /* the real height is set by tv.js */
 .stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; place-items: center; }
-.giant {
-  position: absolute; inset: 0; margin: 0; display: flex; justify-content: space-between; align-items: center; padding: 0 2vw;
-  font: 400 clamp(3.5rem, 16vw, 16rem) / .8 var(--display); text-transform: uppercase; color: var(--ink); pointer-events: none;
-  text-shadow: .03em .03em 0 var(--red), .06em .06em 0 rgba(240, 139, 37, .55); /* a 70s drop-print */
-}
 .antenna { /* rabbit ears, seen while the set is still across the room */
   position: absolute; left: 40%; bottom: 100%; width: 90px; height: 30px; margin-left: -45px; border-radius: 40px 40px 6px 6px;
   background: radial-gradient(circle at 50% 30%, #4a3020, #24160c); pointer-events: none;
@@ -253,6 +248,37 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .bc-title { margin: 0; flex: 1; min-width: 8rem; color: var(--osd); text-transform: uppercase; }
 .broadcast iframe { flex: 1; width: 100%; border: 0; background: #0b0807; }
 
+/* the wide set across the room (tall screens only) */
+.far-tv {
+  display: none; position: absolute; left: 50%; top: 50%; width: 86vw; aspect-ratio: 1.5; margin-left: -43vw; margin-top: -28.67vw;
+  grid-template-columns: minmax(0, 1fr) 19%; gap: 2.4vw; padding: 2.6vw; border-radius: 4vw; transform-origin: 50% 50%; will-change: transform, opacity;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .08), transparent 18%, transparent 82%, rgba(0, 0, 0, .3)),
+    repeating-linear-gradient(92deg, transparent 0 9px, rgba(0, 0, 0, .07) 9px 10px, transparent 10px 24px),
+    linear-gradient(90deg, var(--wood-dark), var(--wood) 18%, var(--wood-light) 50%, var(--wood) 82%, var(--wood-dark));
+  box-shadow: 0 30px 70px rgba(0, 0, 0, .85), inset 0 2px 0 rgba(255, 230, 190, .18);
+}
+.stage.tall .far-tv { display: grid; }
+.stage.tall .tv .antenna { display: none; }
+.far-tv .antenna { width: 60px; height: 20px; margin-left: -30px; }
+.far-tv .antenna::before, .far-tv .antenna::after { height: 34vw; bottom: 10px; width: 3px; }
+.far-tube { padding: 2vw; border-radius: 3.4vw; background: linear-gradient(160deg, #2b211a, #120d09 55%, #1e1611); box-shadow: inset 0 3px 8px rgba(0, 0, 0, .8); }
+.far-screen { position: relative; height: 100%; overflow: hidden; border-radius: 8% / 11%; background: var(--tube); }
+.far-ident, .far-off, .far-power { position: absolute; inset: 0; }
+.far-ident { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .3rem; text-align: center; }
+.far-ident .bars { width: 78%; height: 30%; margin: 0 0 .5rem; }
+.far-ident p { margin: 0; }
+.far-ch { font: 400 1rem/1 var(--crt-font); color: var(--osd); letter-spacing: .06em; }
+.far-name { font: 400 clamp(1.1rem, 5.5vw, 1.6rem)/1 var(--display); color: var(--ink); text-shadow: 2px 2px 0 var(--red); }
+.far-off { display: grid; place-items: end center; padding-bottom: 8%;
+  background: radial-gradient(ellipse 70% 60% at 35% 25%, rgba(255, 245, 225, .07), transparent 60%), radial-gradient(ellipse at 50% 50%, #1f1a15, #0b0907 75%); }
+.far-off .off-hint { font-size: .95rem; }
+.far-power { background: #fff6e4; opacity: 0; transform: scaleY(.004); }
+.far-panel { display: flex; flex-direction: column; align-items: center; gap: 2.4vw; padding: 2.4vw 1vw; border-radius: 2.6vw; background: linear-gradient(180deg, var(--panel), var(--panel-dark)); }
+.far-knob { width: 70%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #6d4a30, #2d1a0e 70%); box-shadow: 0 0 0 2px #8c6a48; }
+.far-grille { flex: 1; width: 80%; border-radius: 4px; background: radial-gradient(circle, rgba(58, 37, 22, .55) 1px, transparent 1.4px) 0 0 / 6px 6px; }
+:lang(ar) .far-ch, :lang(ar) .far-off .off-hint { font-family: var(--body); letter-spacing: 0; }
+
 /* the set up close loses its rounded corners and fills the window */
 .tv.close { border-radius: 0; }
 /* touch screens: no phosphor bloom or flicker, which phones pay for on every frame */
@@ -299,5 +325,4 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* the pixel font has no Arabic, and spacing letters apart breaks Arabic joining */
 :lang(ar) :is(.osd, .tag, .hint-line, .signoff, .program-no, .study h4, .bc-bar, .contact-links a) { font-family: var(--body); letter-spacing: 0; }
 :lang(ar) .tag, :lang(ar) .hint-line, :lang(ar) .signoff { font-size: 1rem; }
-:lang(ar) .giant { text-shadow: -.03em .03em 0 var(--red), -.06em .06em 0 rgba(240, 139, 37, .55); }
 :lang(ar) .off-hint { font-family: var(--body); font-size: 1rem; letter-spacing: 0; }

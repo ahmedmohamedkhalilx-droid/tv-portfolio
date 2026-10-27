@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Righteous&family=Rubik:wght@400;500;600&family=VT323&display=swap">
-  <link rel="stylesheet" href="tv.css?v=20261023a">
+  <link rel="stylesheet" href="tv.css?v=20261027a">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -26,7 +26,18 @@
        then the site plays on its screen -->
   <div class="runway">
   <div class="stage">
-  <p class="giant" aria-hidden="true"><span>Ahmed</span><span>Khalil</span></p>
+  <!-- on tall screens: the wide set across the room, which grows and hands over to the full-screen set -->
+  <div class="far-tv" aria-hidden="true">
+    <div class="antenna"></div>
+    <div class="far-tube">
+      <div class="far-screen">
+        <div class="far-ident"><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><p class="far-ch">CH 01</p><p class="far-name">Ahmed Khalil</p></div>
+        <div class="far-off"><p class="off-hint">Scroll to switch on</p></div>
+        <div class="far-power"></div>
+      </div>
+    </div>
+    <div class="far-panel"><span class="far-knob"></span><span class="far-knob"></span><span class="far-grille"></span></div>
+  </div>
   <div class="tv">
     <div class="antenna" aria-hidden="true"></div>
     <div class="bezel">
@@ -164,6 +175,6 @@
   </div>
   </div>
   </div>
-  <script type="module" src="tv.js?v=20261023a"></script>
+  <script type="module" src="tv.js?v=20261027a"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-import { getProjects } from './projects.js?v=20261023a';
+import { getProjects } from './projects.js?v=20261027a';
 
 // The site plays on a 1970s TV. The page scroll is a timeline: the set starts far away and switched off,
 // scrolling switches it on and brings it closer until it fills the window, then the scroll moves the
@@ -162,9 +162,11 @@ window.addEventListener('keydown', (e) => { if (SCROLL_KEYS.includes(e.key) && !
 const runway = document.querySelector('.runway');
 const stage = runway.querySelector('.stage');
 const tv = stage.querySelector('.tv');
-const giant = stage.querySelector('.giant');
 const antenna = stage.querySelector('.antenna');
 const offEl = stage.querySelector('.off');
+const farTv = stage.querySelector('.far-tv');
+const farOff = stage.querySelector('.far-off');
+const farPower = stage.querySelector('.far-power');
 const powerEl = stage.querySelector('.power');
 const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const easeOut = (t) => 1 - Math.pow(1 - t, 3);
@@ -174,13 +176,18 @@ const lerp = (a, b, t) => a + (b - a) * t;
 let G = null;
 function measure() {
   const vw = document.documentElement.clientWidth, vh = window.innerHeight;
+  const tall = vw < vh;
+  stage.classList.toggle('tall', tall);
+  tv.style.transform = ''; // measure the set as it is up close
+  tv.classList.add('close');
   const sh = screen.clientHeight;
   stage.style.setProperty('--sh', sh + 'px');
-  const far = vw >= vh ? 0.5 : 0.62; // how big the set looks from across the room
+  const far = 0.5; // how big the set looks from across the room (wide windows)
+  const farGrow = vw / (vw * 0.86); // tall screens: the wide set grows until it spans the screen
   const intro = reduceMotion ? 0 : vh * 1.4;
   const travel = Math.max(0, reel.offsetHeight - sh);
   const tops = channels.map((c) => c.offsetTop); // read once here, never during the scroll
-  G = { vh, sh, far, intro, travel, tops };
+  G = { vw, vh, tall, sh, far, farGrow, intro, travel, tops };
   runway.style.height = intro + travel + vh + 'px';
 }
 function channelTop(i) { return G.intro + Math.min(G.travel, G.tops[i]); }
@@ -195,16 +202,34 @@ function update() {
 
   // while the set moves it is its own layer; once it is close it settles, so the picture stays sharp and cheap to scroll
   const moving = near < 1;
-  tv.style.transform = moving ? `scale(${lerp(G.far, 1, near)})` : 'none';
-  tv.style.willChange = moving ? 'transform' : 'auto';
+  const line = clamp01((on - 0.25) / 0.75);
+  const lineOpacity = (on > 0.2 && on < 1 ? 1 - easeOut(line) : 0).toFixed(3);
+  const lineTransform = `scale(${lerp(0.6, 1, clamp01(line * 3))}, ${lerp(0.004, 1, easeOut(clamp01((line - 0.3) / 0.7)))})`;
+  if (G.tall) {
+    // a wide set across the room switches on and grows; near the end the full-screen set fades in over it
+    const hand = clamp01((near - 0.7) / 0.3);
+    farTv.style.transform = `scale(${lerp(0.72, G.farGrow, near)})`;
+    farTv.style.opacity = (1 - hand).toFixed(3);
+    farTv.style.visibility = hand >= 1 ? 'hidden' : '';
+    farOff.style.opacity = clamp01(1 - on / 0.35).toFixed(3);
+    farPower.style.opacity = lineOpacity;
+    farPower.style.transform = lineTransform;
+    tv.style.opacity = hand.toFixed(3);
+    tv.style.transform = moving ? `scale(${lerp(0.94, 1, hand)})` : 'none';
+    tv.style.willChange = moving ? 'transform, opacity' : 'auto';
+    offEl.style.opacity = '0';
+    powerEl.style.opacity = '0';
+  } else {
+    tv.style.opacity = '';
+    tv.style.transform = moving ? `scale(${lerp(G.far, 1, near)})` : 'none';
+    tv.style.willChange = moving ? 'transform' : 'auto';
+    offEl.style.opacity = clamp01(1 - on / 0.35).toFixed(3);
+    powerEl.style.opacity = lineOpacity;
+    powerEl.style.transform = lineTransform;
+  }
   tv.classList.toggle('close', !moving);
-  giant.style.opacity = (1 - near).toFixed(3);
   antenna.style.opacity = clamp01(1 - near * 1.6).toFixed(3);
 
-  offEl.style.opacity = clamp01(1 - on / 0.35).toFixed(3);
-  const line = clamp01((on - 0.25) / 0.75);
-  powerEl.style.opacity = (on > 0.2 && on < 1 ? 1 - easeOut(line) : 0).toFixed(3);
-  powerEl.style.transform = `scale(${lerp(0.6, 1, clamp01(line * 3))}, ${lerp(0.004, 1, easeOut(clamp01((line - 0.3) / 0.7)))})`;
   if (on >= 1 && !switchedOn) showOsd(chLabel(current), channels[current].dataset.name);
   switchedOn = on >= 1;
 
