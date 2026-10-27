@@ -6,6 +6,7 @@ const BASE_PROJECTS = {
   helco: {
     title: 'HELCO',
     desc: 'Bilingual website for an Egyptian audit, tax and advisory firm.',
+    result: 'A site the firm can grow again: 124 services in 3 pillars, in English and Arabic, rebuilt from a deployment whose code was lost.',
     url: 'https://helco-co.github.io/en/', // the root is a redirect page; going straight to /en/ loads faster
     poster: 'assets/posters/helco-m.jpg',
     study: {
@@ -23,6 +24,7 @@ const BASE_PROJECTS = {
   dental: {
     title: 'The Dental Hauz',
     desc: 'WordPress website for a dental clinic, built from its brand sheet.',
+    result: 'Every page of the old site carried over and checked automatically, with 84 browser tests running on every change.',
     url: 'https://ahmedmohamedkhalilx-droid.github.io/The-dental-Website-/',
     poster: 'assets/posters/dental-m.jpg',
     study: {
@@ -40,6 +42,7 @@ const BASE_PROJECTS = {
   tessera: {
     title: 'Tessera',
     desc: 'Bilingual Shopify store for an Egyptian luxury linen house. A working copy: basket and checkout open the real store.',
+    result: 'A complete Arabic, right-to-left store, on a Shopify theme that shipped with no Arabic at all.',
     url: 'tessera-site/', // a static copy of the storefront (Shopify stores cannot be framed); refresh with tools/tessera-copy
     noLink: true,
     poster: 'assets/posters/tessera-m.jpg',
@@ -61,6 +64,7 @@ const BASE_PROJECTS = {
 const PROJECTS_AR = {
   helco: {
     desc: 'موقع ثنائي اللغة لشركة مصرية في التدقيق والضرائب والاستشارات.',
+    result: 'موقع تستطيع الشركة تطويره من جديد: 124 خدمة في 3 محاور، بالعربية والإنجليزية، أُعيد بناؤه من نسخة فُقدت شيفرتها.',
     url: 'https://helco-co.github.io/ar/',
     poster: 'assets/posters/helco-ar-m.jpg',
     study: {
@@ -76,6 +80,7 @@ const PROJECTS_AR = {
   },
   dental: {
     desc: 'موقع ووردبريس لعيادة أسنان، مبني على الهوية البصرية للعيادة.',
+    result: 'نُقلت كل صفحات الموقع القديم وفُحصت تلقائياً، مع 84 اختباراً في المتصفح تعمل مع كل تعديل.',
     study: {
       client: 'ذا دنتال هاوز، عيادة متخصصة في زراعة الأسنان وجراحة الفم وتقويم الأسنان الشفاف وتجميل الأسنان.',
       brief: 'موقع جديد يعكس هوية العيادة، ويعمل على ووردبريس ليتمكن الفريق من إدارته، ويحتفظ بكل ما كان في الموقع القديم بما في ذلك نماذج المرضى.',
@@ -89,6 +94,7 @@ const PROJECTS_AR = {
   },
   tessera: {
     desc: 'متجر شوبيفاي ثنائي اللغة لدار مصرية للمفروشات الفاخرة. نسخة تعمل فعلياً: السلة والدفع يفتحان المتجر الحقيقي.',
+    result: 'متجر عربي كامل من اليمين إلى اليسار، على قالب شوبيفاي لم يكن يدعم العربية إطلاقاً.',
     url: 'tessera-site/ar/',
     poster: 'assets/posters/tessera-ar-m.jpg',
     study: {

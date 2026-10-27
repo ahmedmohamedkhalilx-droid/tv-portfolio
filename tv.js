@@ -1,4 +1,4 @@
-import { getProjects } from './projects.js?v=20261027a';
+import { getProjects } from './projects.js?v=20261027b';
 
 // The site plays on a 1970s TV. The page scroll is a timeline: the set starts far away and switched off,
 // scrolling switches it on and brings it closer until it fills the window, then the scroll moves the
@@ -10,12 +10,12 @@ const ROOT = new URL('./', import.meta.url); // the site root
 const at = (path) => new URL(path, ROOT).href;
 const UI = {
   en: {
-    program: 'Programme', watch: 'Watch it on this set', study: 'The story behind it', client: 'Client', brief: 'The brief',
+    program: 'Programme', result: 'Result', watch: 'Watch it on this set', study: 'The story behind it', client: 'Client', brief: 'The brief',
     built: 'What I built', stack: 'Built with', open: 'Open the site ↗', nowShowing: 'Now showing', ch: 'CH',
     kinds: { helco: 'Corporate · Next.js · EN / AR', tessera: 'Commerce · Shopify · EN / AR', dental: 'Healthcare · WordPress' },
   },
   ar: {
-    program: 'البرنامج', watch: 'شاهده على هذه الشاشة', study: 'القصة وراءه', client: 'العميل', brief: 'المطلوب',
+    program: 'البرنامج', result: 'النتيجة', watch: 'شاهده على هذه الشاشة', study: 'القصة وراءه', client: 'العميل', brief: 'المطلوب',
     built: 'ما بنيته', stack: 'الأدوات المستخدمة', open: 'افتح الموقع ↖', nowShowing: 'يُعرض الآن', ch: 'قناة',
     kinds: { helco: 'شركات · Next.js · عربي / إنجليزي', tessera: 'تجارة إلكترونية · Shopify · عربي / إنجليزي', dental: 'رعاية صحية · WordPress' },
   },
@@ -53,6 +53,8 @@ ORDER.forEach((id, i) => {
   const watch = el('button', 'btn hot', '▶ ' + UI.watch);
   watch.type = 'button';
   watch.addEventListener('click', () => tuneTo(id, watch));
+  const result = el('p', 'result');
+  result.append(el('span', 'result-label', UI.result), document.createTextNode(p.result));
   const ctas = el('div', 'ctas');
   ctas.append(watch);
   const study = el('details', 'study');
@@ -60,7 +62,7 @@ ORDER.forEach((id, i) => {
   p.study.built.forEach((b) => built.append(el('li', '', b)));
   study.append(el('summary', '', UI.study), el('h4', '', UI.client), el('p', '', p.study.client), el('h4', '', UI.brief), el('p', '', p.study.brief),
     el('h4', '', UI.built), built, el('h4', '', UI.stack), el('p', '', p.study.stack));
-  body.append(el('p', 'program-no', `${UI.program} 0${i + 1}`), el('h3', '', p.title), el('p', 'kind', UI.kinds[id]), el('p', 'desc', p.desc), ctas, study);
+  body.append(el('p', 'program-no', `${UI.program} 0${i + 1}`), el('h3', '', p.title), el('p', 'kind', UI.kinds[id]), el('p', 'desc', p.desc), result, ctas, study);
   li.append(thumb, body);
   list.append(li);
 });
@@ -184,7 +186,7 @@ function measure() {
   stage.style.setProperty('--sh', sh + 'px');
   const far = 0.5; // how big the set looks from across the room (wide windows)
   const farGrow = vw / (vw * 0.86); // tall screens: the wide set grows until it spans the screen
-  const intro = reduceMotion ? 0 : vh * 1.4;
+  const intro = reduceMotion ? 0 : vh * 0.6;
   const travel = Math.max(0, reel.offsetHeight - sh);
   const tops = channels.map((c) => c.offsetTop); // read once here, never during the scroll
   G = { vw, vh, tall, sh, far, farGrow, intro, travel, tops };
