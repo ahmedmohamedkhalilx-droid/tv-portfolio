@@ -1,4 +1,4 @@
-import { getProjects } from './projects.js?v=20261027b';
+import { getProjects } from './projects.js?v=20261121a';
 
 // The site plays on a 1970s TV. The page scroll is a timeline: the set starts far away and switched off,
 // scrolling switches it on and brings it closer until it fills the window, then the scroll moves the

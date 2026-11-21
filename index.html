@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/x7W7R75k8Roq0WaVRQX9blP4OufE5xbAdzklGxsgpw='; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; frame-src 'self' https://helco-co.github.io https://ahmedmohamedkhalilx-droid.github.io; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Ahmed Khalil | Digital craft, made distinct</title>
   <meta name="description" content="Ahmed Khalil, independent web developer in Cairo. Thoughtful websites and online stores in English and Arabic: HELCO, Tessera and The Dental Hauz.">
@@ -18,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Righteous&family=Rubik:wght@400;500;600&family=VT323&display=swap">
-  <link rel="stylesheet" href="tv.css?v=20261027b">
+  <link rel="stylesheet" href="tv.css?v=20261121a">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -136,7 +138,7 @@
             <p class="bc-title" id="bc-title"></p>
             <a id="bc-link" href="#" target="_blank" rel="noopener">Open the site ↗</a>
           </div>
-          <iframe id="bc-frame" title="" src="about:blank"></iframe>
+          <iframe id="bc-frame" title="" src="about:blank" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox" referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>
 
         <div class="glass" aria-hidden="true"></div>
@@ -153,7 +155,7 @@
       <div class="stripes" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
       <div class="dial">
         <ol class="dial-marks" aria-hidden="true">
-          <li style="--a:0deg">1</li><li style="--a:60deg">2</li><li style="--a:120deg">3</li><li style="--a:180deg">4</li><li style="--a:240deg">5</li><li style="--a:300deg">6</li>
+          <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li>
         </ol>
         <button class="knob" id="knob" type="button" aria-label="Turn the dial to the next channel"></button>
       </div>
@@ -177,6 +179,6 @@
   </div>
   </div>
   </div>
-  <script type="module" src="tv.js?v=20261027b"></script>
+  <script type="module" src="tv.js?v=20261121a"></script>
 </body>
 </html>
