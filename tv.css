@@ -248,7 +248,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* ---------- a site playing on the set ---------- */
 .broadcast { position: absolute; inset: 0; z-index: 4; display: flex; flex-direction: column; background: #000; }
-.broadcast[hidden] { display: none; }
+.broadcast[hidden], .bc-bar a[hidden] { display: none; }
 .bc-bar {
   display: flex; align-items: center; gap: .6rem 1rem; flex-wrap: wrap; padding: .6rem 4% .55rem; padding-top: max(.6rem, 2.5%);
   background: #0e0a07; border-bottom: 1px solid rgba(244, 231, 203, .15); font: 400 1.15rem/1.2 var(--crt-font); letter-spacing: .04em;

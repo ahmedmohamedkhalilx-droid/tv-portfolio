@@ -1,4 +1,4 @@
-import { getProjects } from './projects.js?v=20261121a';
+import { getProjects } from './projects.js?v=20261121c';
 
 // The site plays on a 1970s TV. The page scroll is a timeline: the set starts far away and switched off,
 // scrolling switches it on and brings it closer until it fills the window, then the scroll moves the
@@ -135,6 +135,10 @@ function tuneTo(id, trigger) {
   const p = projects[id];
   lastTrigger = trigger;
   burst(() => {
+    // A site on this same origin (the Tessera copy, the dental site) would see straight through the sandbox
+    // with allow-same-origin, so it plays in an opaque origin instead and cannot reach this page.
+    const sameOrigin = new URL(p.url, location.href).origin === location.origin;
+    bcFrame.setAttribute('sandbox', (sameOrigin ? '' : 'allow-same-origin ') + 'allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox');
     bcFrame.src = p.url;
     bcFrame.title = p.title;
     bcTitle.textContent = `${UI.nowShowing}: ${p.title}`;
